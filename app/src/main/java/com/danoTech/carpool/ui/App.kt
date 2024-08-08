@@ -1,5 +1,7 @@
 package com.danoTech.carpool.ui
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -8,19 +10,20 @@ import com.danoTech.carpool.ui.screens.IntroScreen
 import com.danoTech.carpool.ui.screens.forgot_password.ForgotPasswordScreen
 import com.danoTech.carpool.ui.screens.login.LoginPage
 import com.danoTech.carpool.ui.screens.profile.ProfileScreen
+import com.danoTech.carpool.ui.screens.request_ride.RequestRideScreen
 import com.danoTech.carpool.ui.screens.signin.SignupScreen
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun App(){
     val navController = rememberNavController()
-
     NavHost(
         navController = navController,
         startDestination = Routes.Intro.route
     ) {
         composable(Routes.Intro.route) {
             IntroScreen(
-                onSigninButtonClick = {
+                onSigningButtonClick = {
                     navController.navigate(Routes.Login.route)
                 },
                 onSignupButtonClick = {
@@ -36,6 +39,12 @@ fun App(){
                 },
                 onSignUpClick = {
                     navController.navigate(Routes.Login.route)
+                },
+                onPopBackStack = { from, to ->
+                    navController.navigate(to) {
+                        launchSingleTop = true
+                        popUpTo(from) { inclusive = true }
+                    }
                 }
             )
         }
@@ -54,8 +63,26 @@ fun App(){
             )
         }
 
+        composable(Routes.RequestRide.route) {
+            RequestRideScreen(
+                onBack = {
+                    navController.popBackStack()
+                },
+                onClose = {
+                    navController.navigate(Routes.RequestRide.route)
+                }
+            )
+        }
+
         composable(Routes.Signup.route) {
-            SignupScreen()
+            SignupScreen(
+                openAndPopUp = { from, to ->
+                    navController.navigate(to) {
+                        launchSingleTop = true
+                        popUpTo(from) { inclusive = true }
+                    }
+                }
+            )
         }
     }
 }

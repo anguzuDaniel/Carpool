@@ -22,15 +22,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.danoTech.carpool.R
-import com.danoTech.carpool.ui.theme.CarpoolTheme
 
 @Composable
 fun IntroScreen(
-    onSigninButtonClick: () -> Unit = {},
+    onSigningButtonClick: () -> Unit = {},
     onSignupButtonClick: () -> Unit = {},
 ) {
     Box(
@@ -71,7 +69,7 @@ fun IntroScreen(
 
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Button(
-                    onClick = onSigninButtonClick,
+                    onClick = onSigningButtonClick,
                     Modifier
                         .fillMaxWidth()
                         .height(50.dp)
@@ -98,13 +96,5 @@ fun IntroScreen(
                 }
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun IntroScreenPreview() {
-    CarpoolTheme {
-        IntroScreen()
     }
 }

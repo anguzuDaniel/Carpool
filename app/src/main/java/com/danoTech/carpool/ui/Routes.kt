@@ -6,4 +6,5 @@ sealed class Routes(val route: String) {
     data object Signup : Routes("Signup")
     data object ForgotPassword : Routes("ForgotPassword")
     data object Profile : Routes("Profile")
+    data object RequestRide : Routes("RequestRide")
 }

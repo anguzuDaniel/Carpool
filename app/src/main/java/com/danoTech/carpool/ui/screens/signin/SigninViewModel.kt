@@ -6,6 +6,8 @@ import com.danoTech.carpool.common.ext.isValidEmail
 import com.danoTech.carpool.common.ext.isValidPassword
 import com.danoTech.carpool.common.ext.passwordMatches
 import com.danoTech.carpool.model.service.AccountService
+import com.danoTech.carpool.ui.Routes
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -28,7 +30,7 @@ class SignupViewModel @Inject constructor(
     /**
      * This function is called when the user changes the email field.
      * @param email The email the user entered.
-     * @see CreateAccountUiState
+     * @see SignupUiState
      */
     fun onEmailChanged(email: String) {
         _uiState.value = _uiState.value.copy(email = email)
@@ -37,7 +39,7 @@ class SignupViewModel @Inject constructor(
     /**
      * This function is called when the user changes the password field.
      * @param password The password the user entered.
-     * @see CreateAccountUiState
+     * @see SignupUiState
      */
     fun onPasswordChanged(password: String) {
         _uiState.value = _uiState.value.copy(password = password)
@@ -46,7 +48,7 @@ class SignupViewModel @Inject constructor(
     /**
      * This function is called when the user input in the confirm password field.
      * @param confirmPassword
-     * @see CreateAccount
+     * @see SignupUiState
      */
     fun onConfirmPasswordChanged(confirmPassword: String) {
         _uiState.value = _uiState.value.copy(confirmPassword = confirmPassword)
@@ -98,7 +100,7 @@ class SignupViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(isCreateAccountSuccess = false)
     }
 
-    fun onSignUpClick() {
+    fun onSignUpClick(openAndPopUp: (String, String) -> Unit) {
         if (!email.isValidEmail()) {
             _uiState.value = _uiState.value.copy(
                 isCreateAccountError = true, message = "Please enter a valid email!"
@@ -117,22 +119,33 @@ class SignupViewModel @Inject constructor(
         if (!password.passwordMatches(uiState.value.confirmPassword)) {
             _uiState.value = _uiState.value.copy(
                 isCreateAccountError = true,
-                message = "Please enter a valid email!"
+                message = "Password doesn't match!"
             )
             return
         }
 
         viewModelScope.launch {
-            accountService.createAccountWithEmailAndPassword(email, password)
-            _uiState.value = _uiState.value.copy(
-                isLoading = true
-            )
-        }.invokeOnCompletion {
-            _uiState.value =
-                _uiState.value.copy(
-                    message = "You are ready to login!",
-                    isLoading = false
+            try {
+                accountService.createAccountWithEmailAndPassword(email, password)
+                _uiState.value = _uiState.value.copy(
+                    isLoading = true,
+                    message = "Account created successfully!"
                 )
+
+                openAndPopUp(Routes.Signup.route, Routes.Login.route)
+            } catch (e: FirebaseAuthUserCollisionException) {
+                _uiState.value = _uiState.value.copy(
+                    isCreateAccountError = true,
+                    message = "The email address is already in use by another account."
+                )
+            } catch (error: Exception) {
+                _uiState.value = _uiState.value.copy(
+                    isCreateAccountError = true,
+                    message = "Account creation failed: ${error.message}"
+                )
+            } finally {
+                _uiState.value = _uiState.value.copy(isLoading = false)
+            }
         }
     }
 }
