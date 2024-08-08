@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "895432117836",
+    "project_id": "carpool-41b55",
+    "storage_bucket": "carpool-41b55.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:895432117836:android:abff2a98cd05c217afaee9",
+        "android_client_info": {
+          "package_name": "com.danoTech.carpool"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARbG-BQE2FukgND8vgGdpI5BOuXuu8BQk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Carpool</string>
+    <string name="go_to_sign_in">Signin</string>
+    <string name="no_account_yet_msg">No account yet? Sign up</string>
+    <string name="welcome_screen_image">Welcome image</string>
+    <string name="welcome">Welcome</string>
+    <string name="intro_message">Welcome to the car pool app</string>
+    <string name="sign_in">Sign in</string>
+    <string name="Search">Search</string>
+    <string name="empty">empty</string>
+    <string name="email">Email</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+</resources>
