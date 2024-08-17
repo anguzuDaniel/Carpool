@@ -12,7 +12,6 @@
     <!-- Uses INTERNET to fetch RSS feed + images -->
     <uses-permission android:name="android.permission.INTERNET" />
 
-
     <application
         android:name=".CarPoolApplication"
         android:allowBackup="true"
@@ -24,6 +23,27 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Carpool"
         tools:targetApi="31">
+
+        <meta-data
+            android:name="firebase_performance_logcat_enabled"
+            android:value="true" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyD9QS3ujMB1XvtuazbBMjOtbABXZEqnXJo" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <meta-data
+            android:name="firebase_performance_logcat_enabled"
+            android:value="true" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyD9QS3ujMB1XvtuazbBMjOtbABXZEqnXJo" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"

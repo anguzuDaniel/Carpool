@@ -5,8 +5,15 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.google.android.gms.maps.model.CameraPosition
@@ -22,34 +29,82 @@ import java.util.Locale
 fun MapDisplay(
     country: String,
     city: String,
-    modifier: Modifier = Modifier,
-    viewModel: RideRequestViewModel,
+    searchText: String,
+    modifier: Modifier = Modifier,viewModel: RideRequestViewModel,
 ) {
     val context = LocalContext.current
     val uiState = viewModel.uiState.collectAsState().value
     val gc = Geocoder(context, Locale.getDefault())
 
-    // location of kampala uganda
-    val lat = 0.347596
-    val lon = 32.582520
+    // Location of Kampala, Uganda (default)
+    val defaultLocation = LatLng(0.347596, 32.582520)
 
-    val uganda = LatLng(lat, lon)
-
-    // using the location of kampala uganda as the default location
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(uganda, 10f)
+        position = CameraPosition.fromLatLngZoom(defaultLocation, 10f)
     }
+
+    var searchResults by remember { mutableStateOf<List<LatLng>>(emptyList()) }
+    var selectedLocation by remember { mutableStateOf<LatLng?>(null) }
+    var showCarAvailability by remember { mutableStateOf(false) }
+    var areCarsAvailable by remember { mutableStateOf(false) }
+
 
     Box(Modifier.fillMaxSize()) {
         GoogleMap(
             modifier = Modifier.fillMaxSize(),
-            cameraPositionState = cameraPositionState
+            cameraPositionState = cameraPositionState,
         ) {
+            // Default marker
             Marker(
-                state = MarkerState(position = uganda),
-                title = country,
+                state = MarkerState(position = defaultLocation),title = country,
                 snippet = "Marker in $country"
             )
+
+            // Markers for search results
+            searchResults.forEach { location ->
+                Marker(
+                    state = MarkerState(position = location),
+                    onClick = {
+                        selectedLocation = location
+                        showCarAvailability = true
+                        // Check car availability (e.g., viewModel.checkCarAvailability(location))
+                        true
+                    }
+                )
+            }
+
+            // Marker for selected location
+            selectedLocation?.let {
+                Marker(
+                    state = MarkerState(position = it),
+                    title = "Selected Location"
+                )
+            }
         }
+    }
+
+    // Display car availability (adapt to your UI)
+    if (showCarAvailability) {
+        AlertDialog(
+            onDismissRequest = { showCarAvailability = false },
+            title = { Text("Car Availability") },
+            text = { Text("Cars available at this location: ${if (areCarsAvailable) "Yes" else "No"}") },
+            confirmButton = {
+                if (areCarsAvailable) {
+                    Button(onClick = {
+                        // Handle connecting the user to an available car
+                        // (e.g., viewModel.connectToCar(selectedLocation))
+                        showCarAvailability= false
+                    }) {
+                        Text("Request Ride")
+                    }
+                }
+            },
+            dismissButton = {
+                Button(onClick = { showCarAvailability = false }) {
+                    Text("Dismiss")
+                }
+            }
+        )
     }
 }

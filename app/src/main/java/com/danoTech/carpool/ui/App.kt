@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.danoTech.carpool.ui.screens.IntroScreen
 import com.danoTech.carpool.ui.screens.forgot_password.ForgotPasswordScreen
+import com.danoTech.carpool.ui.screens.home.HomePage
 import com.danoTech.carpool.ui.screens.login.LoginPage
 import com.danoTech.carpool.ui.screens.profile.ProfileScreen
 import com.danoTech.carpool.ui.screens.request_ride.RequestRideScreen
@@ -19,7 +20,7 @@ fun App(){
     val navController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = Routes.Intro.route
+        startDestination = Routes.RequestRide.route
     ) {
         composable(Routes.Intro.route) {
             IntroScreen(
@@ -81,6 +82,18 @@ fun App(){
                         launchSingleTop = true
                         popUpTo(from) { inclusive = true }
                     }
+                }
+            )
+        }
+
+        composable(Routes.Home.route) {
+            HomePage(
+                onRideRequestClick = {
+                    navController.navigate(Routes.RequestRide.route)
+                },
+                onProfileClick = { /*TODO*/ },
+                onSettingsClick = {
+
                 }
             )
         }

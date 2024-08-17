@@ -6,6 +6,7 @@ plugins {
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
     id("com.google.firebase.crashlytics")
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
@@ -69,6 +70,8 @@ dependencies {
     implementation(libs.play.services.auth)
     implementation(libs.com.google.firebase.firebase.analytics)
 
+    implementation(libs.androidx.material)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -97,6 +100,10 @@ dependencies {
     implementation(libs.firebase.messaging.ktx)
     implementation(libs.firebase.crashlytics)
     implementation(libs.google.firebase.analytics)
+
+    implementation(libs.accompanist.systemuicontroller)
+    implementation(libs.accompanist.permissions)
+    implementation(libs.material3)
 
     // Add the dependency for the Cloud Storage library
     // When using the BoM, you don't specify versions in Firebase library dependencies
