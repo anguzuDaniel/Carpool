@@ -49,9 +49,8 @@ fun MapDisplay(
     var areCarsAvailable by remember { mutableStateOf(false) }
 
 
-    Box(Modifier.fillMaxSize()) {
         GoogleMap(
-            modifier = Modifier.fillMaxSize(),
+            modifier = modifier,
             cameraPositionState = cameraPositionState,
         ) {
             // Default marker
@@ -81,7 +80,6 @@ fun MapDisplay(
                 )
             }
         }
-    }
 
     // Display car availability (adapt to your UI)
     if (showCarAvailability) {
