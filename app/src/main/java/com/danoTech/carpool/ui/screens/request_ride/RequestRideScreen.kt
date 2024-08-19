@@ -10,6 +10,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 fun RequestRideScreen(
     onBack: () -> Unit,
     onClose: () -> Unit,
+    onNavItemClicked: (String) -> Unit,
     viewModel: RideRequestViewModel = hiltViewModel()
 ) {
     MapScreenWithSearch(
@@ -17,6 +18,9 @@ fun RequestRideScreen(
         country = "Kampala",
         onBack = onBack,
         onClose = onClose,
-        viewModel = viewModel
+        viewModel = viewModel,
+        onNavItemClicked = {
+            onNavItemClicked(it)
+        }
     )
 }

@@ -1,10 +1,9 @@
 package com.danoTech.carpool.ui.screens.request_ride
 
 import android.location.Geocoder
+import android.location.Location
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -28,16 +27,16 @@ import java.util.Locale
 @Composable
 fun MapDisplay(
     country: String,
-    city: String,
-    searchText: String,
-    modifier: Modifier = Modifier,viewModel: RideRequestViewModel,
+    currentLocation: Location,
+    modifier: Modifier = Modifier,
+    viewModel: RideRequestViewModel,
 ) {
     val context = LocalContext.current
     val uiState = viewModel.uiState.collectAsState().value
     val gc = Geocoder(context, Locale.getDefault())
 
     // Location of Kampala, Uganda (default)
-    val defaultLocation = LatLng(0.347596, 32.582520)
+    val defaultLocation = LatLng(currentLocation.latitude, currentLocation.longitude)
 
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(defaultLocation, 10f)
@@ -48,38 +47,37 @@ fun MapDisplay(
     var showCarAvailability by remember { mutableStateOf(false) }
     var areCarsAvailable by remember { mutableStateOf(false) }
 
+    GoogleMap(
+        modifier = modifier,
+        cameraPositionState = cameraPositionState,
+    ) {
+        // Default marker
+        Marker(
+            state = MarkerState(position = defaultLocation), title = country,
+            snippet = "Marker in $country"
+        )
 
-        GoogleMap(
-            modifier = modifier,
-            cameraPositionState = cameraPositionState,
-        ) {
-            // Default marker
+        // Markers for search results
+        searchResults.forEach { location ->
             Marker(
-                state = MarkerState(position = defaultLocation),title = country,
-                snippet = "Marker in $country"
+                state = MarkerState(position = location),
+                onClick = {
+                    selectedLocation = location
+                    showCarAvailability = true
+                    // Check car availability (e.g., viewModel.checkCarAvailability(location))
+                    true
+                }
             )
-
-            // Markers for search results
-            searchResults.forEach { location ->
-                Marker(
-                    state = MarkerState(position = location),
-                    onClick = {
-                        selectedLocation = location
-                        showCarAvailability = true
-                        // Check car availability (e.g., viewModel.checkCarAvailability(location))
-                        true
-                    }
-                )
-            }
-
-            // Marker for selected location
-            selectedLocation?.let {
-                Marker(
-                    state = MarkerState(position = it),
-                    title = "Selected Location"
-                )
-            }
         }
+
+        // Marker for selected location
+        selectedLocation?.let {
+            Marker(
+                state = MarkerState(position = it),
+                title = "Selected Location"
+            )
+        }
+    }
 
     // Display car availability (adapt to your UI)
     if (showCarAvailability) {

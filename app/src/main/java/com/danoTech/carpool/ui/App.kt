@@ -3,6 +3,7 @@ package com.danoTech.carpool.ui
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -18,6 +19,7 @@ import com.danoTech.carpool.ui.screens.signin.SignupScreen
 @Composable
 fun App(){
     val navController = rememberNavController()
+
     NavHost(
         navController = navController,
         startDestination = Routes.RequestRide.route
@@ -71,6 +73,16 @@ fun App(){
                 },
                 onClose = {
                     navController.navigate(Routes.RequestRide.route)
+                },
+                onNavItemClicked = { screen ->
+                    navController.navigate(screen) {
+                        // Pop all back stack entries
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
                 }
             )
         }

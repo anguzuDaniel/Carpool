@@ -10,5 +10,6 @@ data class MapUiState(
     var isFalloutMap: Boolean = false,
     var query: String = "",
     val isLoading: Boolean = false,
-    val businesses: List<RideRequest> = emptyList(),
+    val businesses: List<RideRequestUiState> = emptyList(),
+    val destination: String = ""
 )
