@@ -30,26 +30,30 @@ constructor(private val firestore: FirebaseFirestore, private val auth: AccountS
     override suspend fun getReview(reviewId: String): Car? =
         firestore.collection(REVIEW_COLLECTION).document(reviewId).get().await().toObject()
 
-    override suspend fun save(review: Car): String =
+    override suspend fun save(car: Car): String =
         trace(SAVE_TASK_TRACE) {
             val taskWithUserId =
-                review.copy(id = FirebaseAuth.getInstance().currentUser!!.email.toString())
+                car.copy(id = FirebaseAuth.getInstance().currentUser!!.email.toString())
             firestore.collection(REVIEW_COLLECTION).add(taskWithUserId).await().id
         }
 
-    override suspend fun update(review: Car): Unit =
+    override suspend fun update(car: Car): Unit =
         trace(UPDATE_TASK_TRACE) {
-            firestore.collection(REVIEW_COLLECTION).document(review.id).set(review).await()
+            firestore.collection(REVIEW_COLLECTION).document(car.id).set(car).await()
         }
 
-    override suspend fun delete(reviewId: String) {
-        firestore.collection(REVIEW_COLLECTION).document(reviewId).delete().await()
+    override suspend fun delete(carId: String) {
+        firestore.collection(REVIEW_COLLECTION).document(carId).delete().await()
     }
+
+    override suspend fun getAvailableRide(destination: String): Flow<List<List<Car>?>> = firestore.collection(REVIEW_COLLECTION).whereEqualTo(DESTINATION_FIELD, destination).dataObjects()
 
     companion object {
         private const val USER_ID_FIELD = "userId"
+        private const val DESTINATION_FIELD = "destination"
         private const val REVIEW_COLLECTION = "reviews"
         private const val SAVE_TASK_TRACE = "saveReview"
         private const val UPDATE_TASK_TRACE = "updateReview"
+        private const val CAR_COLLECTION = "cars"
     }
 }

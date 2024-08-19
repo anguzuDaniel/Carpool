@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.danoTech.carpool.ui.screens.offer_ride.OfferedRideUiState
 
 @Composable
 fun OfferPoolScreen() {
@@ -27,23 +28,17 @@ fun OfferPoolScreen() {
 
         // Replace with a list of your offered rides
         LazyColumn {
-            items(listOf(
-                OfferedRide(
-                    pickupLocation = "Kampala",
-                    destination = "Entebbe",
-                    seatsAvailable = 2,
-                    departureTime = "10:00 AM",
-                    price = "10,000 UGX"
-                )
-            )) { offeredRide ->
-                OfferedRideItem(offeredRide)
-            }
+//            items(listOf(
+//
+//            )) { offeredRide ->
+//                OfferedRideItem(offeredRide)
+//            }
         }
     }
 }
 
 @Composable
-fun OfferedRideItem(offeredRide: OfferedRide) {
+fun OfferedRideItem(offeredRideUiState: OfferedRideUiState) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -52,21 +47,14 @@ fun OfferedRideItem(offeredRide: OfferedRide) {
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
-            Text(text = "Pickup: ${offeredRide.pickupLocation}")
-            Text(text = "Destination: ${offeredRide.destination}")
-            Text(text = "Seats: ${offeredRide.seatsAvailable}")
-            Text(text = "Departure Time: ${offeredRide.departureTime}")
-            Text(text = "Price: ${offeredRide.price}")
+            Text(text = "Pickup: ${offeredRideUiState.pickupLocation}")
+            Text(text = "Destination: ${offeredRideUiState.destination}")
+            Text(text = "Seats: ${offeredRideUiState.seatsAvailable}")
+            Text(text = "Departure Time: ${offeredRideUiState.departureTime}")
+            Text(text = "Price: ${offeredRideUiState.price}")
 
             // Add buttons for edit and delete here
         }
     }
 }
 
-data class OfferedRide(
-    val pickupLocation: String,
-    val destination: String,
-    val seatsAvailable: Int,
-    val departureTime: String,
-    val price: String
-)

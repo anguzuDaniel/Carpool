@@ -40,12 +40,15 @@ fun LoginPage(
     onPopBackStack: (String, String) -> Unit,
     onForgotPasswordClick: () -> Unit,
     onSignUpClick: () -> Unit,
-    loginPageViewModel: LoginViewModel = hiltViewModel()
+    loginPageViewModel: LoginViewModel = hiltViewModel(),
+    modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current as Activity
     val uiState = loginPageViewModel.uiState.collectAsState().value
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
         ClickableText(
             text = AnnotatedString("Sign up here"),
             modifier = Modifier
@@ -63,7 +66,7 @@ fun LoginPage(
     }
 
     Column(
-        modifier = Modifier.padding(16.dp),
+        modifier = modifier.padding(16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

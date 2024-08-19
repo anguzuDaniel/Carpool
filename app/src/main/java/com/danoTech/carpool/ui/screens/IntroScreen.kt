@@ -30,9 +30,10 @@ import com.danoTech.carpool.R
 fun IntroScreen(
     onSigningButtonClick: () -> Unit = {},
     onSignupButtonClick: () -> Unit = {},
+    modifier: Modifier = Modifier
 ) {
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
     ) {
         Column(
             modifier = Modifier

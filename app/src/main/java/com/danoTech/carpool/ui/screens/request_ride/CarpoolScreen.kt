@@ -54,45 +54,46 @@ fun CarpoolScreen(
             Column(
                 modifier = Modifier.padding(start = 16.dp, end = 16.dp)
             ) {
-                TabRow(
-                    selectedTabIndex = selectedTabIndex.intValue,
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                    contentColor = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier
-                        .padding(bottom = 16.dp)
-                        .clip(MaterialTheme.shapes.extraLarge)
-                ) {
-                    tabs.forEachIndexed { index, title ->
-                        Tab(
-                            selected = selectedTabIndex.intValue == index,
-                            onClick = { selectedTabIndex.intValue = index },
-                            text = { Text(text = title) },
-                            selectedContentColor = MaterialTheme.colorScheme.onPrimary,
-                            unselectedContentColor = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.background(
-                                if (selectedTabIndex.intValue == index) MaterialTheme.colorScheme.primary else Color.Transparent
-                            )
-                        )
-                    }
-                }
-
-                when (selectedTabIndex.intValue) {
-                    0 -> RideConfirmationScreen(
-                        pickupLocation = pickupLocation,
-                        numberOfSeats = numberOfSeats,
-                        estimatedTime = estimatedTime,
-                        price = price,
-                        destination = destination,
-                        onConfirmRide = {},
-                        onDestinationChanged = {
-                            onDestinationChanged(it)
-                        },
-                        onSearchCarPool = onSearchCarPool
-                    )
-
-                    1 -> OfferPoolScreen()
-                    else -> {}
-                }
+                RideConfirmationScreen(
+                    pickupLocation = pickupLocation,
+                    numberOfSeats = numberOfSeats,
+                    estimatedTime = estimatedTime,
+                    price = price,
+                    destination = destination,
+                    onConfirmRide = {},
+                    onDestinationChanged = {
+                        onDestinationChanged(it)
+                    },
+                    onSearchCarPool = onSearchCarPool
+                )
+//                TabRow(
+//                    selectedTabIndex = selectedTabIndex.intValue,
+//                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
+//                    contentColor = MaterialTheme.colorScheme.primary,
+//                    modifier = Modifier
+//                        .padding(bottom = 16.dp)
+//                        .clip(MaterialTheme.shapes.extraLarge)
+//                ) {
+//                    tabs.forEachIndexed { index, title ->
+//                        Tab(
+//                            selected = selectedTabIndex.intValue == index,
+//                            onClick = { selectedTabIndex.intValue = index },
+//                            text = { Text(text = title) },
+//                            selectedContentColor = MaterialTheme.colorScheme.onPrimary,
+//                            unselectedContentColor = MaterialTheme.colorScheme.primary,
+//                            modifier = Modifier.background(
+//                                if (selectedTabIndex.intValue == index) MaterialTheme.colorScheme.primary else Color.Transparent
+//                            )
+//                        )
+//                    }
+//                }
+//
+//                when (selectedTabIndex.intValue) {
+//
+//
+//                    1 -> OfferPoolScreen()
+//                    else -> {}
+//                }
             }
         },
         sheetShape = RoundedCornerShape(
@@ -105,27 +106,6 @@ fun CarpoolScreen(
             bottomSheetState = sheetState
         )
     ) { innerPadding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-        ) {
-            BottomNavigation {
-                val screens = listOf(
-                    BottomNavScreen.Home,
-                    BottomNavScreen.Profile
-                )
-                screens.forEach { screen ->
-                    BottomNavigationItem(
-                        selected = false,
-                        onClick = {
-                            onNavItemClick(screen.route)
-                        },
-                        icon = { Icon(screen.icon, contentDescription = screen.title) },
-                        label = { Text(screen.title) }
-                    )
-                }
-            }
-        }
+
     }
 }

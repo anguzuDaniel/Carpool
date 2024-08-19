@@ -43,7 +43,7 @@ fun ProfileScreen(
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = uiState!!.name,
+            text = uiState?.name ?: "",
             fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.titleLarge
         )

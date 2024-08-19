@@ -13,18 +13,31 @@ package com.danoTech.carpool.ui.screens.request_ride
   import androidx.activity.compose.rememberLauncherForActivityResult
   import androidx.activity.result.contract.ActivityResultContracts
   import androidx.annotation.RequiresApi
+  import androidx.compose.foundation.layout.Arrangement
   import androidx.compose.foundation.layout.Box
   import androidx.compose.foundation.layout.Column
+  import androidx.compose.foundation.layout.Row
   import androidx.compose.foundation.layout.fillMaxHeight
   import androidx.compose.foundation.layout.fillMaxSize
+  import androidx.compose.foundation.layout.fillMaxWidth
   import androidx.compose.foundation.layout.padding
   import androidx.compose.material.icons.Icons
   import androidx.compose.material.icons.filled.Home
+  import androidx.compose.material.icons.filled.Notifications
   import androidx.compose.material.icons.filled.Person
+  import androidx.compose.material.icons.filled.Place
+  import androidx.compose.material.icons.twotone.Menu
+  import androidx.compose.material.icons.twotone.Notifications
+  import androidx.compose.material.icons.twotone.Settings
   import androidx.compose.material3.ExperimentalMaterial3Api
+  import androidx.compose.material3.Icon
+  import androidx.compose.material3.IconButton
+  import androidx.compose.material3.IconButtonDefaults
+  import androidx.compose.material3.MaterialTheme
   import androidx.compose.material3.ModalBottomSheet
   import androidx.compose.material3.OutlinedTextField
   import androidx.compose.material3.SheetValue
+  import androidx.compose.material3.Surface
   import androidx.compose.material3.Text
   import androidx.compose.material3.rememberModalBottomSheetState
   import androidx.compose.runtime.Composable
@@ -51,8 +64,10 @@ package com.danoTech.carpool.ui.screens.request_ride
   import java.util.Locale
 
 sealed class BottomNavScreen(val route: String, val title: String, val icon: ImageVector) {
-    object Home : BottomNavScreen(Routes.Home.route, "Home", Icons.Default.Home)
-    object Profile : BottomNavScreen(Routes.Profile.route, "Profile", Icons.Default.Person)
+    data object Home : BottomNavScreen(Routes.Home.route, "Home", Icons.Default.Home)
+    data object Profile : BottomNavScreen(Routes.Profile.route, "Profile", Icons.Default.Person)
+    data object RideRequest : BottomNavScreen(Routes.RequestRide.route, "Ride", Icons.Filled.Place)
+    data object OfferRide : BottomNavScreen(Routes.RequestRide.route, "OfferRide", Icons.TwoTone.Settings)
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -65,7 +80,8 @@ fun MapScreenWithSearch(
     onBack: () -> Unit = {},
     onClose: () -> Unit = {},
     onNavItemClicked: (String) -> Unit,
-    viewModel: RideRequestViewModel = hiltViewModel()
+    viewModel: RideRequestViewModel = hiltViewModel(),
+    openDrawerNavigation: () -> Unit
 ) {
     val context = LocalContext.current
     val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
@@ -119,27 +135,66 @@ fun MapScreenWithSearch(
         onBack()
     }
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        MapScreenWithModalBottomSheet(
-            city,
-            country,
-            modifier = modifier,
-            viewModel,
-            currentLocation,
-            geocoder,
-            onNavItemClicked = {
-                onNavItemClicked(it)
+    Surface {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            MapScreenWithModalBottomSheet(
+                city,
+                country,
+                modifier = modifier,
+                viewModel,
+                currentLocation,
+                geocoder,
+                onNavItemClicked = {
+                    onNavItemClicked(it)
+                }
+            )
+        } else {
+            MapScreenWithBottomSheetScaffold(
+                city,
+                country,
+                modifier = modifier,
+                viewModel,
+                currentLocation,
+                geocoder
+            )
+        }
+
+        Box(
+            modifier = Modifier
+                .padding(horizontal = 16.dp, vertical = 50.dp)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                IconButton(
+                    onClick = openDrawerNavigation,
+                    colors = IconButtonDefaults.iconButtonColors(
+                        containerColor = MaterialTheme.colorScheme.background
+                    )
+                ) {
+                    Icon(
+                        imageVector = Icons.TwoTone.Menu,
+                        contentDescription = "Menu",
+                        tint = MaterialTheme.colorScheme.onBackground
+                    )
+                }
+
+                IconButton(
+                    onClick = openDrawerNavigation,
+                    colors = IconButtonDefaults.iconButtonColors(
+                        containerColor = MaterialTheme.colorScheme.background
+                    )
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Notifications,
+                        contentDescription = "Menu",
+                        tint = MaterialTheme.colorScheme.onBackground
+                    )
+                }
             }
-        )
-    } else {
-        MapScreenWithBottomSheetScaffold(
-            city,
-            country,
-            modifier = modifier,
-            viewModel,
-            currentLocation,
-            geocoder
-        )
+        }
     }
 }
 
@@ -175,7 +230,7 @@ fun MapScreenWithModalBottomSheet(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         currentLocation?.let { location ->
@@ -261,6 +316,7 @@ fun MapScreenWithBottomSheetScaffold(
             viewModel = viewModel,
             country = country,
             currentLocation = location,
+            modifier = modifier
         )
     }
 }

@@ -10,11 +10,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.sharp.CheckCircle
 import androidx.compose.material.icons.sharp.Close
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -31,7 +29,9 @@ fun RideSearchDialog(
     message: String,
     onDismissRequest: () -> Unit
 ) {
-    Dialog(onDismissRequest = { onDismissRequest() }) {
+    Dialog(
+        onDismissRequest = { onDismissRequest() }
+    ) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -48,13 +48,13 @@ fun RideSearchDialog(
                     Icon(
                         imageVector = Icons.Sharp.Close,
                         contentDescription = "Close",
-                        tint = MaterialTheme.colorScheme.primary,
+                        tint = MaterialTheme.colorScheme.error,
                         modifier = Modifier.size(50.dp)
                     )
                 } else {
                     CircularProgressIndicator(
-                        modifier = Modifier.size(16.dp),
-                        strokeWidth = 8.dp,
+                        modifier = Modifier.size(20.dp),
+                        strokeWidth = 2.dp,
                         color = MaterialTheme.colorScheme.onSurface
                     )
                 }
@@ -65,8 +65,8 @@ fun RideSearchDialog(
                         .fillMaxSize()
                         .wrapContentSize(Alignment.Center),
                     textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.bodyLarge
-
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onBackground
                 )
             }
         }
