@@ -7,11 +7,13 @@ import com.danoTech.carpool.model.service.StorageService
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.dataObjects
+import com.google.firebase.firestore.snapshots
 import com.google.firebase.firestore.toObject
 import com.google.firebase.firestore.toObjects
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -47,7 +49,16 @@ constructor(private val firestore: FirebaseFirestore, private val auth: AccountS
         firestore.collection(REVIEW_COLLECTION).document(carId).delete().await()
     }
 
-    override suspend fun getAvailableRide(destination: String): Flow<List<Car>> = firestore.collection(CAR_COLLECTION).whereEqualTo(DESTINATION_FIELD, destination).dataObjects()
+    override suspend fun getAvailableRide(destination: String): Flow<List<Car>> {
+        return firestore.collection(CAR_COLLECTION)
+            .whereEqualTo(DESTINATION_FIELD, destination)
+            .snapshots()
+            .map { snapshot ->
+                snapshot.documents.map { document ->
+                    document.toObject(Car::class.java)!! // Ensure proper null handling
+                }
+            }
+    }
 
     companion object {
         private const val USER_ID_FIELD = "userId"

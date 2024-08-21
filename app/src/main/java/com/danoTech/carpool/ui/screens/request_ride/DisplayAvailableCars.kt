@@ -39,13 +39,39 @@ fun DisplayAvailableCars(
     cars: List<Car>
 ) {
     Column {
-        Text(
-            text = "Available Cars",
-            color = MaterialTheme.colorScheme.onBackground,
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(bottom = 20.dp),
-            fontSize = 24.sp
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth().padding(bottom = 20.dp),
+        ) {
+            Text(
+                text = "Available Cars",
+                color = MaterialTheme.colorScheme.onBackground,
+                style = MaterialTheme.typography.titleLarge,
+                fontSize = 24.sp
+            )
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier.clickable {  }
+            ) {
+                Text(
+                    text = "view all",
+                    color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontSize = 16.sp,
+                    modifier = Modifier.padding(end = 5.dp)
+                )
+
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
+                    contentDescription = "see more",
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(10.dp)
+                )
+            }
+        }
 
         HorizontalDivider(
             modifier = Modifier.padding(bottom = 20.dp)
@@ -53,85 +79,9 @@ fun DisplayAvailableCars(
 
         LazyRow {
             items(cars) { car ->
-                CarDisplay(
+                CarCardDisplayHorizontal(
                     onClick = {},
                     car = car
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun CarDisplay(
-    onClick: () -> Unit = {},
-    car: Car
-) {
-    Card(
-        modifier = Modifier.padding(end = 16.dp).size(width = 200.dp, height = Dp.Unspecified)
-    ) {
-        Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Box {
-                Image(
-                    painter = painterResource(id = R.drawable.adobe_stock_1),
-                    contentDescription = "Default car",
-                    modifier = Modifier
-                        .size(120.dp)
-                )
-            }
-
-            Column(
-                modifier = Modifier.padding(start = 16.dp, bottom = 16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = car.name,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    style = MaterialTheme.typography.titleSmall
-                )
-
-                Spacer(modifier = Modifier.smallSpacer())
-
-                Text(
-                    text = "Ugx ${car.price}",
-                    color = MaterialTheme.colorScheme.onBackground,
-                    style = MaterialTheme.typography.titleSmall
-                )
-            }
-
-            HorizontalDivider(
-                modifier = Modifier.then(Modifier.fillMaxWidth())
-                    .height(1.dp),
-                color = Color.LightGray
-            )
-
-            Row(
-                modifier = Modifier
-                    .clickable {
-                        onClick()
-                    }
-                    .padding(16.dp)
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = stringResource(id = R.string.book_sit),
-                    fontSize = 16.sp,
-                    color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(end = 8.dp)
-                )
-
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
-                    contentDescription = "see more",
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(14.dp)
                 )
             }
         }
