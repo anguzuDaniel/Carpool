@@ -8,6 +8,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.dataObjects
 import com.google.firebase.firestore.toObject
+import com.google.firebase.firestore.toObjects
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -34,7 +35,7 @@ constructor(private val firestore: FirebaseFirestore, private val auth: AccountS
         trace(SAVE_TASK_TRACE) {
             val taskWithUserId =
                 car.copy(id = FirebaseAuth.getInstance().currentUser!!.email.toString())
-            firestore.collection(REVIEW_COLLECTION).add(taskWithUserId).await().id
+            firestore.collection(CAR_COLLECTION).add(taskWithUserId).await().id
         }
 
     override suspend fun update(car: Car): Unit =
@@ -46,13 +47,13 @@ constructor(private val firestore: FirebaseFirestore, private val auth: AccountS
         firestore.collection(REVIEW_COLLECTION).document(carId).delete().await()
     }
 
-    override suspend fun getAvailableRide(destination: String): Flow<List<List<Car>?>> = firestore.collection(REVIEW_COLLECTION).whereEqualTo(DESTINATION_FIELD, destination).dataObjects()
+    override suspend fun getAvailableRide(destination: String): Flow<List<Car>> = firestore.collection(CAR_COLLECTION).whereEqualTo(DESTINATION_FIELD, destination).dataObjects()
 
     companion object {
         private const val USER_ID_FIELD = "userId"
         private const val DESTINATION_FIELD = "destination"
         private const val REVIEW_COLLECTION = "reviews"
-        private const val SAVE_TASK_TRACE = "saveReview"
+        private const val SAVE_TASK_TRACE = "saveCar"
         private const val UPDATE_TASK_TRACE = "updateReview"
         private const val CAR_COLLECTION = "cars"
     }

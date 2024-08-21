@@ -9,5 +9,5 @@ interface StorageService {
     suspend fun save(car: Car): String
     suspend fun update(car: Car)
     suspend fun delete(carId: String)
-    suspend fun getAvailableRide(destination: String): Flow<List<List<Car>?>>
+    suspend fun getAvailableRide(destination: String): Flow<List<Car>>
 }

@@ -47,7 +47,9 @@ fun DatePickerDocked(
     ) {
         OutlinedTextField(
             value = departureTime,
-            onValueChange = onDepartureTimeClicked,
+            onValueChange = {
+                onDepartureTimeClicked(it)
+            },
             label = { Text("Pick Departure time.") },
             readOnly = true,
             trailingIcon = {

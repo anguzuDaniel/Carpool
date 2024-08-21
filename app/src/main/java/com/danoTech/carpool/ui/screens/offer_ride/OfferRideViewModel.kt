@@ -1,6 +1,7 @@
 package com.danoTech.carpool.ui.screens.offer_ride
 
-import androidx.lifecycle.ViewModel
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.viewModelScope
 import com.danoTech.carpool.CarPoolViewModel
 import com.danoTech.carpool.model.Car
@@ -13,6 +14,8 @@ import java.time.LocalDate
 import java.util.UUID
 import javax.inject.Inject
 
+
+@RequiresApi(Build.VERSION_CODES.O)
 @HiltViewModel
 class RideOfferViewModel @Inject constructor(
     private val storageService: StorageService
@@ -20,6 +23,7 @@ class RideOfferViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(OfferedRideUiState())
     val uiState = _uiState.asStateFlow()
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun offerRide() {
         val car = Car(
             id = UUID.randomUUID().toString(),
@@ -35,12 +39,25 @@ class RideOfferViewModel @Inject constructor(
             price = uiState.value.price
         )
 
+        _uiState.value = _uiState.value.copy(
+            loading = true
+        )
+
         viewModelScope.launch {
             try {
                 storageService.save(car)
             } catch (e: Exception) {
-
+                _uiState.value = _uiState.value.copy(
+                    hasError = true,
+                    message = "Something went wring, ${e.message}"
+                )
             }
+        }.invokeOnCompletion {
+            _uiState.value = _uiState.value.copy(
+                loading = false,
+                hasMessage = true,
+                message = "Ride Offer saved."
+            )
         }
     }
 
@@ -62,9 +79,13 @@ class RideOfferViewModel @Inject constructor(
         )
     }
 
-    fun addPrice(price: String) {
+    fun addPrice(price: Int) {
         _uiState.value = _uiState.value.copy(
-            price = price
+            price = price.toString()
         )
+    }
+
+    fun addNumberOfSeats(i: Int) {
+
     }
 }

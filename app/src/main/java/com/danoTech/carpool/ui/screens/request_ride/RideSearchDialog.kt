@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.sharp.Close
+import androidx.compose.material.icons.sharp.Info
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -46,7 +47,7 @@ fun RideSearchDialog(
             ) {
                 if (isError) {
                     Icon(
-                        imageVector = Icons.Sharp.Close,
+                        imageVector = Icons.Sharp.Info,
                         contentDescription = "Close",
                         tint = MaterialTheme.colorScheme.error,
                         modifier = Modifier.size(50.dp)
@@ -65,7 +66,7 @@ fun RideSearchDialog(
                         .fillMaxSize()
                         .wrapContentSize(Alignment.Center),
                     textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.bodyLarge,
+                    style = MaterialTheme.typography.titleSmall,
                     color = MaterialTheme.colorScheme.onBackground
                 )
             }

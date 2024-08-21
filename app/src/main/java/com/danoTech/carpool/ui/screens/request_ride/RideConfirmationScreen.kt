@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.LocationSearching
+import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -47,6 +49,21 @@ fun RideConfirmationScreen(
             .fillMaxSize()
     ) {
         Card(
+            onClick = { /*TODO*/ },
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.primary
+            ),
+            modifier = Modifier.fillMaxWidth().padding(bottom = 10.dp)
+        ) {
+            Text(
+                text = "Where would you like to go?",
+                color = MaterialTheme.colorScheme.onPrimary,
+                style = MaterialTheme.typography.titleSmall,
+                modifier = Modifier.padding(16.dp)
+            )
+        }
+
+        Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
@@ -66,7 +83,7 @@ fun RideConfirmationScreen(
                     modifier = Modifier.fillMaxHeight(.7f)
                 ) {
                     Icon(
-                        imageVector = Icons.Filled.LocationOn,
+                        imageVector = Icons.Default.LocationSearching,
                         contentDescription = "",
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.weight(1f)

@@ -1,9 +1,7 @@
 package com.danoTech.carpool.ui.screens.request_ride
 
 import android.annotation.SuppressLint
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.danoTech.carpool.model.service.AccountService
 import com.danoTech.carpool.CarPoolViewModel
@@ -13,14 +11,11 @@ import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.tasks.CancellationTokenSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import okhttp3.internal.wait
 import javax.inject.Inject
 
 @HiltViewModel
@@ -60,6 +55,8 @@ class RideRequestViewModel
                     isFalloutMap = !_uiState.value.isFalloutMap
                 )
             }
+
+            else -> TODO()
         }
     }
 
@@ -99,13 +96,20 @@ class RideRequestViewModel
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val foundCars = storageService.getAvailableRide(uiState.value.destination).first().first()
-                _availableCars.value = foundCars ?: emptyList()
+                val foundCars = storageService.getAvailableRide(uiState.value.destination).first()
+                _availableCars.value = foundCars
+                Log.d("Found Cars Success", _availableCars.value.toString())
+
+                _rideUiState.value = _rideUiState.value.copy(
+                    isSearchingForRide = false,
+                    searchMessage = ""
+                )
             } catch (exception: Exception) {
                 _rideUiState.value = _rideUiState.value.copy(
                     isErrorSearch = true,
-                    searchMessage = "Sorry, we could not find any available rides."
+                    searchMessage = "Sorry, something went wrong. ${exception.message}"
                 )
+                Log.d("Found Cars", exception.message.toString())
             }
         }
     }
@@ -113,6 +117,12 @@ class RideRequestViewModel
     fun onDestinationChanged(destination: String) {
         _uiState.value = _uiState.value.copy(
             destination = destination
+        )
+    }
+
+    fun isDialogOpen(isClosed: Boolean) {
+        _rideUiState.value = _rideUiState.value.copy(
+            isSearchingForRide = isClosed
         )
     }
 

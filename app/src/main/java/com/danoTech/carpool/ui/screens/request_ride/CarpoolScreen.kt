@@ -1,30 +1,20 @@
 package com.danoTech.carpool.ui.screens.request_ride
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SheetValue
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.danoTech.carpool.model.Car
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,7 +27,8 @@ fun CarpoolScreen(
     price: String = "",
     onNavItemClick: (String) -> Unit = {},
     onDestinationChanged: (String) -> Unit = {},
-    onSearchCarPool: () -> Unit = {}
+    onSearchCarPool: () -> Unit = {},
+    availableCars: List<Car>
 ) {
     val sheetState = rememberStandardBottomSheetState(
         initialValue = SheetValue.PartiallyExpanded,
@@ -54,18 +45,22 @@ fun CarpoolScreen(
             Column(
                 modifier = Modifier.padding(start = 16.dp, end = 16.dp)
             ) {
-                RideConfirmationScreen(
-                    pickupLocation = pickupLocation,
-                    numberOfSeats = numberOfSeats,
-                    estimatedTime = estimatedTime,
-                    price = price,
-                    destination = destination,
-                    onConfirmRide = {},
-                    onDestinationChanged = {
-                        onDestinationChanged(it)
-                    },
-                    onSearchCarPool = onSearchCarPool
-                )
+                if (availableCars.isEmpty()){
+                    RideConfirmationScreen(
+                        pickupLocation = pickupLocation,
+                        numberOfSeats = numberOfSeats,
+                        estimatedTime = estimatedTime,
+                        price = price,
+                        destination = destination,
+                        onConfirmRide = {},
+                        onDestinationChanged = {
+                            onDestinationChanged(it)
+                        },
+                        onSearchCarPool = onSearchCarPool
+                    )
+                } else {
+                    DisplayAvailableCars(cars = availableCars)
+                }
 //                TabRow(
 //                    selectedTabIndex = selectedTabIndex.intValue,
 //                    containerColor = MaterialTheme.colorScheme.secondaryContainer,

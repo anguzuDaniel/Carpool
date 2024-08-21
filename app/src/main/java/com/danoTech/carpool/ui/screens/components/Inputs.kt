@@ -52,54 +52,54 @@ fun TextInput(
         placeholder = {
             Text(
                 text = labelText,
-                style = MaterialTheme.typography.labelSmall,
+                style = MaterialTheme.typography.titleSmall,
             )
         },
         keyboardOptions = KeyboardOptions(
+            autoCorrectEnabled = false,
             keyboardType = KeyboardType.Text,
-            autoCorrect = false,
-            imeAction = ImeAction.Next,
+            imeAction = ImeAction.Next
         ),
         modifier = modifier
             .fillMaxWidth()
             .clickable(onClick = { onSearchInputClicked() }),
     )
-    Spacer(modifier = modifier.height(5.dp))
+    Spacer(modifier = modifier.height(16.dp))
 }
 
 @Composable
 fun NumberInputWithLabel(
-    @StringRes placeholder: Int = R.string.empty,
     labelText: String,
     value: String,
     modifier: Modifier = Modifier,
+    placeholder: Int = 0,
     onValueChanged: (String) -> Unit = {},
     onSearchInputClicked: () -> Unit = {},
 ) {
     Text(
         text = labelText,
-        style = MaterialTheme.typography.labelSmall,
+        style = MaterialTheme.typography.titleMedium
     )
-    Spacer(modifier = modifier.height(5.dp))
+    Spacer(modifier = modifier.height(8.dp))
     OutlinedTextField(
         value = value,
         onValueChange = { onValueChanged(it) },
         keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Text,
-            autoCorrect = false,
-            imeAction = ImeAction.Next,
+            autoCorrectEnabled = false,
+            keyboardType = KeyboardType.Number,
+            imeAction = ImeAction.Next
         ),
         placeholder = {
             Text(
-                text = stringResource(placeholder),
-                style = MaterialTheme.typography.labelSmall,
+                text = placeholder.toString()  ,
+                style = MaterialTheme.typography.titleSmall,
             )
         },
         modifier = modifier
             .fillMaxWidth()
             .clickable(onClick = { onSearchInputClicked() }),
     )
-    Spacer(modifier = modifier.height(5.dp))
+    Spacer(modifier = modifier.height(16.dp))
 }
 
 @Composable
@@ -113,26 +113,28 @@ fun TextInputWithLabel(
 ) {
     Text(
         text = labelText,
-        style = MaterialTheme.typography.labelSmall,
+        style = MaterialTheme.typography.titleMedium,
+        color = MaterialTheme.colorScheme.onBackground
     )
     Spacer(modifier = modifier.height(5.dp))
     OutlinedTextField(
         value = value,
         onValueChange = { onValueChanged(it) },
         keyboardOptions = KeyboardOptions(
+            autoCorrectEnabled = false,
             keyboardType = KeyboardType.Text,
-            autoCorrect = false,
-            imeAction = ImeAction.Next,
+            imeAction = ImeAction.Next
         ),
         placeholder = {
             Text(
                 text = stringResource(placeholder),
-                style = MaterialTheme.typography.labelSmall,
+                style = MaterialTheme.typography.titleSmall,
             )
         },
         modifier = modifier
             .fillMaxWidth()
             .clickable(onClick = { onSearchInputClicked() }),
+        singleLine = true
     )
     Spacer(modifier = modifier.height(5.dp))
 }
@@ -149,9 +151,9 @@ fun ReviewInputWithLabel(
         value = value,
         onValueChange = { onValueChanged(it) },
         keyboardOptions = KeyboardOptions(
+            autoCorrectEnabled = true,
             keyboardType = KeyboardType.Text,
-            autoCorrect = true,
-            imeAction = ImeAction.Next,
+            imeAction = ImeAction.Next
         ),
         placeholder = {
             Text(
