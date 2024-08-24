@@ -56,10 +56,38 @@ fun AddRideForm(
             .padding(16.dp)
     ) {
         item {
-          Column {
+            Column {
               AnimatedVisibility(visible = uiState.hasError || uiState.hasMessage) {
                   ErrorText(text = uiState.message)
               }
+
+                TextInputWithLabel(
+                    labelText = "Car number plate",
+                    placeholder = R.string.number_plate,
+                    value = uiState.name,
+                    onValueChanged = { viewModel.onNumberPlate(it) },
+                )
+
+                TextInputWithLabel(
+                    labelText = "Model",
+                    placeholder = R.string.feilder,
+                    value = uiState.model,
+                    onValueChanged = { viewModel.onAddModel(it) },
+                )
+
+                TextInputWithLabel(
+                    labelText = "Make",
+                    placeholder = R.string.toyota,
+                    value = uiState.make,
+                    onValueChanged = { viewModel.onAddMake(it) },
+                )
+
+                TextInputWithLabel(
+                    labelText = "Driver's name",
+                    placeholder = R.string.john_doe,
+                    value = uiState.driverName,
+                    onValueChanged = { viewModel.onAddDriversName(it) },
+                )
 
               TextInputWithLabel(
                   labelText = "Pickup Location",
@@ -84,7 +112,7 @@ fun AddRideForm(
               DatePickerDocked(
                   departureTime = uiState.date,
                   onDepartureTimeClicked = {
-                      viewModel.updateSelectedDate(LocalDate.parse(it))
+                      viewModel.updateSelectedDate(it)
                   }
               )
 
@@ -101,8 +129,7 @@ fun AddRideForm(
                   onClick = viewModel::offerRide,
                   modifier = Modifier.fillMaxWidth()
               )
-          }
+            }
         }
-
     }
 }

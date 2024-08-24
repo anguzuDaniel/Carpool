@@ -9,4 +9,5 @@ sealed class Routes(val route: String) {
     data object RequestRide : Routes("RequestRide")
     data object Home : Routes("Home")
     data object OfferRide : Routes("OfferRide")
+    data object AvailableRides : Routes("Available Rides")
 }

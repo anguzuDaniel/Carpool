@@ -21,9 +21,11 @@ import androidx.compose.ui.unit.dp
  * shows a circular progress indicator
  */
 @Composable
-fun LoadingPage() {
+fun LoadingPage(
+    modifier: Modifier = Modifier
+) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(horizontal = 16.dp, vertical = 12.dp)
             .animateContentSize(

@@ -42,7 +42,7 @@ fun RideConfirmationScreen(
     onConfirmRide: () -> Unit,
     destination: String,
     onDestinationChanged: (String) -> Unit = {},
-    onSearchCarPool: () -> Unit = {}
+    onSearchCarPool: (String) -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -132,7 +132,9 @@ fun RideConfirmationScreen(
                     )
 
                     Button(
-                        onClick = onSearchCarPool,
+                        onClick = {
+                            onSearchCarPool(destination)
+                        },
                         modifier = Modifier.fillMaxWidth(),
                         enabled = destination.isNotEmpty()
                     ) {

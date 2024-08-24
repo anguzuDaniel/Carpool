@@ -11,7 +11,7 @@ data class Car(
     val driverName: String = "",
     val make: String = "",
     val model: String = "",
-    val year: Int = 2023,
+    val year: String = "",
     val pickupLocation: String = "",
     val destination: String = "",
     val seatsAvailable: Int = 0,

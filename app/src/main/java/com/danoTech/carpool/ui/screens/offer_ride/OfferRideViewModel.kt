@@ -10,10 +10,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import java.util.UUID
 import javax.inject.Inject
-
 
 @RequiresApi(Build.VERSION_CODES.O)
 @HiltViewModel
@@ -31,11 +29,11 @@ class RideOfferViewModel @Inject constructor(
             driverName = uiState.value.driverName,
             make = uiState.value.make,
             model = uiState.value.model,
-            year = uiState.value.year.year,
-            pickupLocation = uiState.value.pickupLocation,
-            destination = uiState.value.destination,
+            year = uiState.value.year,
+            pickupLocation = uiState.value.pickupLocation.lowercase(),
+            destination = uiState.value.destination.lowercase(),
             seatsAvailable = uiState.value.seatsAvailable,
-            departureTime = uiState.value.departureTime.toString(),
+            departureTime = uiState.value.departureTime,
             price = uiState.value.price
         )
 
@@ -61,7 +59,7 @@ class RideOfferViewModel @Inject constructor(
         }
     }
 
-    fun updateSelectedDate(date: LocalDate) {
+    fun updateSelectedDate(date: String) {
         _uiState.value = _uiState.value.copy(
             departureTime = date
         )
@@ -85,7 +83,33 @@ class RideOfferViewModel @Inject constructor(
         )
     }
 
-    fun addNumberOfSeats(i: Int) {
+    fun addNumberOfSeats(numberOfSeats: Int) {
+        _uiState.value = _uiState.value.copy(
+            seatsAvailable = numberOfSeats
+        )
+    }
 
+    fun onNumberPlate(numberPlate: String) {
+        _uiState.value = _uiState.value.copy(
+            name = numberPlate
+        )
+    }
+
+    fun onAddModel(model: String) {
+        _uiState.value = _uiState.value.copy(
+            model = model
+        )
+    }
+
+    fun onAddDriversName(name: String) {
+        _uiState.value = _uiState.value.copy(
+            driverName = name
+        )
+    }
+
+    fun onAddMake(make: String) {
+        _uiState.value = _uiState.value.copy(
+            make = make
+        )
     }
 }

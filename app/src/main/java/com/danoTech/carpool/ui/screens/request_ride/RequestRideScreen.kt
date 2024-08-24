@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.danoTech.carpool.ui.screens.request_ride.map.MapScreenWithSearch
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
@@ -12,9 +13,10 @@ fun RequestRideScreen(
     onBack: () -> Unit,
     onClose: () -> Unit,
     onNavItemClicked: (String) -> Unit,
-    viewModel: RideRequestViewModel = hiltViewModel(),
     modifier: Modifier = Modifier,
-    openDrawerNavigation: () -> Unit
+    viewModel: RideRequestViewModel = hiltViewModel(),
+    openDrawerNavigation: () -> Unit,
+    onSearchPool: (String) -> Unit
 ) {
     MapScreenWithSearch(
         city = "Uganda",
@@ -26,6 +28,7 @@ fun RequestRideScreen(
             onNavItemClicked(it)
         },
         modifier = modifier,
-        openDrawerNavigation = openDrawerNavigation
+        openDrawerNavigation = openDrawerNavigation,
+        onSearchPool = onSearchPool
     )
 }

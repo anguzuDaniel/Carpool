@@ -6,14 +6,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.danoTech.carpool.ui.screens.IntroScreen
 import com.danoTech.carpool.ui.screens.forgot_password.ForgotPasswordScreen
 import com.danoTech.carpool.ui.screens.home.HomePage
 import com.danoTech.carpool.ui.screens.login.LoginPage
 import com.danoTech.carpool.ui.screens.offer_ride.AddRideScreen
 import com.danoTech.carpool.ui.screens.profile.ProfileScreen
+import com.danoTech.carpool.ui.screens.request_ride.available_cars.DisplayAvailableCarsScreen
 import com.danoTech.carpool.ui.screens.request_ride.RequestRideScreen
 import com.danoTech.carpool.ui.screens.signin.SignupScreen
 
@@ -90,7 +93,10 @@ fun NavigateToScreen(
                         restoreState = true
                     }
                 },
-                openDrawerNavigation = openDrawerNavigation
+                openDrawerNavigation = openDrawerNavigation,
+                onSearchPool = { destination ->
+                    navController.navigate("${Routes.AvailableRides.route}/${destination}")
+                }
             )
         }
 
@@ -125,6 +131,20 @@ fun NavigateToScreen(
                 onBackClicked = {
                     navController.popBackStack()
                 }
+            )
+        }
+
+        composable(
+            route = "${Routes.AvailableRides.route}/{destination}",
+            arguments = listOf(navArgument("destination") { type = NavType.StringType }),
+        ) { backStackEntry ->
+            val destination = backStackEntry.arguments?.getString("destination")
+
+            DisplayAvailableCarsScreen(
+                onBack = {
+                    navController.popBackStack()
+                },
+                destination = destination ?: ""
             )
         }
     }

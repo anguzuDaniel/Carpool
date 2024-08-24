@@ -9,7 +9,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.dataObjects
 import com.google.firebase.firestore.snapshots
 import com.google.firebase.firestore.toObject
-import com.google.firebase.firestore.toObjects
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -55,7 +54,7 @@ constructor(private val firestore: FirebaseFirestore, private val auth: AccountS
             .snapshots()
             .map { snapshot ->
                 snapshot.documents.map { document ->
-                    document.toObject(Car::class.java)!! // Ensure proper null handling
+                    document.toObject(Car::class.java) ?: Car()
                 }
             }
     }

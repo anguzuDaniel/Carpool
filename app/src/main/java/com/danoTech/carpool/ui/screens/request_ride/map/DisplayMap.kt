@@ -1,4 +1,4 @@
-package com.danoTech.carpool.ui.screens.request_ride
+package com.danoTech.carpool.ui.screens.request_ride.map
 
 import android.location.Geocoder
 import android.location.Location
@@ -15,6 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import com.danoTech.carpool.ui.screens.request_ride.RideRequestViewModel
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap

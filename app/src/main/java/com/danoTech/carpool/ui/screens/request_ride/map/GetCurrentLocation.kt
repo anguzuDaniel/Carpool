@@ -1,4 +1,4 @@
-package com.danoTech.carpool.ui.screens.request_ride
+package com.danoTech.carpool.ui.screens.request_ride.map
 
 import android.annotation.SuppressLint
 import android.location.Location

@@ -3,16 +3,16 @@ package com.danoTech.carpool.ui.screens.request_ride
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.lifecycle.viewModelScope
-import com.danoTech.carpool.model.service.AccountService
 import com.danoTech.carpool.CarPoolViewModel
-import com.danoTech.carpool.model.Car
+import com.danoTech.carpool.model.service.AccountService
 import com.danoTech.carpool.model.service.StorageService
+import com.danoTech.carpool.ui.screens.request_ride.map.MapEvent
+import com.danoTech.carpool.ui.screens.request_ride.map.MapStyle
+import com.danoTech.carpool.ui.screens.request_ride.map.MapUiState
 import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.gms.tasks.CancellationTokenSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -26,10 +26,7 @@ class RideRequestViewModel
 ) : CarPoolViewModel() {
     private val _uiState = MutableStateFlow(MapUiState())
     val uiState = _uiState.asStateFlow()
-    private val _availableCars = MutableStateFlow<List<Car>>(emptyList())
-    val availableCars: StateFlow<List<Car>> = _availableCars.asStateFlow()
 
-    private val cancellationTokenSource = CancellationTokenSource()
     private val _rideUiState = MutableStateFlow(RideRequestUiState())
     val rideRequestUiState = _rideUiState.asStateFlow()
 
@@ -88,7 +85,7 @@ class RideRequestViewModel
 
     }
 
-    fun searchForCarpool() {
+    fun searchForCarpool(destination: String) {
         _rideUiState.value = _rideUiState.value.copy(
             isSearchingForRide = true,
             searchMessage = "Searching for available ride..."
@@ -96,16 +93,15 @@ class RideRequestViewModel
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val foundCars = storageService.getAvailableRide(uiState.value.destination).first()
-                _availableCars.value = foundCars
-                Log.d("Found Cars Success", _availableCars.value.toString())
-
+                val foundCars = storageService.getAvailableRide(destination).first()
                 _rideUiState.value = _rideUiState.value.copy(
                     isSearchingForRide = false,
-                    searchMessage = ""
+                    searchMessage = if (foundCars.isEmpty()) "No cars found for the searched destination" else "",
+                    availableCars = foundCars
                 )
             } catch (exception: Exception) {
                 _rideUiState.value = _rideUiState.value.copy(
+                    isSearchingForRide = false,
                     isErrorSearch = true,
                     searchMessage = "Sorry, something went wrong. ${exception.message}"
                 )

@@ -1,4 +1,4 @@
-package com.danoTech.carpool.ui.screens.request_ride
+package com.danoTech.carpool.ui.screens.request_ride.map
 
 import android.location.Geocoder
 import android.location.Location
@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SheetValue
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -23,20 +22,21 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.danoTech.carpool.model.Car
+import com.danoTech.carpool.ui.screens.request_ride.RideRequestViewModel
+import com.danoTech.carpool.ui.screens.request_ride.available_cars.CarpoolScreen
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapScreenWithModalBottomSheet(
-    city: String,
     country: String,
     modifier: Modifier = Modifier,
     viewModel: RideRequestViewModel = hiltViewModel(),
     currentLocation: Location?,
     geocoder: Geocoder,
     onNavItemClicked: (String) -> Unit,
+    onSearchPool: (String) -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
@@ -46,7 +46,6 @@ fun MapScreenWithModalBottomSheet(
     var showConfirmationDialog by remember { mutableStateOf(false) }
     val uiState = viewModel.uiState.collectAsState().value
     val rideRequestState = viewModel.rideRequestUiState.collectAsState().value
-    val availableCars = viewModel.availableCars.collectAsState().value
 
     LaunchedEffect(key1 = carpoolOptionText) {
         if (carpoolOptionText.isBlank() && sheetState.currentValue == SheetValue.Expanded) {
@@ -90,9 +89,10 @@ fun MapScreenWithModalBottomSheet(
                     viewModel.onDestinationChanged(it)
                 },
                 onSearchCarPool = {
-                    viewModel.searchForCarpool()
+//                    viewModel.searchForCarpool()
+                    onSearchPool(uiState.destination)
                 },
-                availableCars = availableCars
+                availableCars = rideRequestState.availableCars
             )
         }
     }
@@ -103,13 +103,13 @@ fun MapScreenWithModalBottomSheet(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapScreenWithBottomSheetScaffold(
-    city: String,
     country: String,
     modifier: Modifier = Modifier,
     viewModel: RideRequestViewModel,
     currentLocation: Location?,
     geocoder: Geocoder,
-    onNavItemClicked: (String) -> Unit
+    onNavItemClicked: (String) -> Unit,
+    onSearchPool: (String) -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
@@ -119,7 +119,6 @@ fun MapScreenWithBottomSheetScaffold(
     var showConfirmationDialog by remember { mutableStateOf(false) }
     val uiState = viewModel.uiState.collectAsState().value
     val rideRequestState = viewModel.rideRequestUiState.collectAsState().value
-    val availableCars = viewModel.availableCars.collectAsState().value
 
     LaunchedEffect(key1 = carpoolOptionText) {
         if (carpoolOptionText.isBlank() && sheetState.currentValue == SheetValue.Expanded) {
@@ -149,7 +148,6 @@ fun MapScreenWithBottomSheetScaffold(
                 )
             }
 
-
             CarpoolScreen(
                 modifier = Modifier.fillMaxHeight(.5f),
                 pickupLocation = locationName,
@@ -161,12 +159,13 @@ fun MapScreenWithBottomSheetScaffold(
                     onNavItemClicked(it)
                 },
                 onDestinationChanged = {
-                    viewModel.onDestinationChanged(it)
+                    viewModel.onDestinationChanged(it.lowercase())
                 },
                 onSearchCarPool = {
-                    viewModel.searchForCarpool()
+//                    viewModel.searchForCarpool()
+                    onSearchPool(uiState.destination)
                 },
-                availableCars = availableCars
+                availableCars = rideRequestState.availableCars
             )
         }
     }

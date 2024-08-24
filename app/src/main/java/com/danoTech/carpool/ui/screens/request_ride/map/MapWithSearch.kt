@@ -1,4 +1,4 @@
-package com.danoTech.carpool.ui.screens.request_ride
+package com.danoTech.carpool.ui.screens.request_ride.map
 
   //noinspection UsingMaterialAndMaterial3Libraries
   //noinspection UsingMaterialAndMaterial3Libraries
@@ -19,10 +19,7 @@ package com.danoTech.carpool.ui.screens.request_ride
   import androidx.compose.foundation.layout.fillMaxWidth
   import androidx.compose.foundation.layout.padding
   import androidx.compose.material.icons.Icons
-  import androidx.compose.material.icons.filled.CarRental
-  import androidx.compose.material.icons.filled.LocalTaxi
   import androidx.compose.material.icons.filled.Notifications
-  import androidx.compose.material.icons.filled.Person
   import androidx.compose.material.icons.twotone.Menu
   import androidx.compose.material3.Icon
   import androidx.compose.material3.IconButton
@@ -31,28 +28,20 @@ package com.danoTech.carpool.ui.screens.request_ride
   import androidx.compose.material3.Surface
   import androidx.compose.runtime.Composable
   import androidx.compose.runtime.LaunchedEffect
-  import androidx.compose.runtime.collectAsState
   import androidx.compose.runtime.getValue
   import androidx.compose.runtime.mutableStateOf
   import androidx.compose.runtime.remember
   import androidx.compose.runtime.setValue
   import androidx.compose.ui.Alignment
   import androidx.compose.ui.Modifier
-  import androidx.compose.ui.graphics.vector.ImageVector
   import androidx.compose.ui.platform.LocalContext
   import androidx.compose.ui.unit.dp
   import androidx.core.app.ActivityCompat
   import androidx.hilt.navigation.compose.hiltViewModel
-  import com.danoTech.carpool.ui.Routes
+  import com.danoTech.carpool.ui.screens.request_ride.RideRequestViewModel
   import com.google.android.gms.location.LocationServices
-  import com.google.android.gms.tasks.CancellationTokenSource
   import java.util.Locale
 
-sealed class BottomNavScreen(val route: String, val title: String, val icon: ImageVector) {
-    data object Profile : BottomNavScreen(Routes.Profile.route, "Profile", Icons.Filled.Person)
-    data object RideRequest : BottomNavScreen(Routes.RequestRide.route, "Find ride", Icons.Filled.CarRental)
-    data object OfferRide : BottomNavScreen(Routes.OfferRide.route, "Offer ride", Icons.Filled.LocalTaxi)
-}
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -65,11 +54,11 @@ fun MapScreenWithSearch(
     onClose: () -> Unit = {},
     onNavItemClicked: (String) -> Unit,
     viewModel: RideRequestViewModel = hiltViewModel(),
-    openDrawerNavigation: () -> Unit
+    openDrawerNavigation: () -> Unit,
+    onSearchPool: (String) -> Unit
 ) {
     val context = LocalContext.current
     val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
-    val cancellationTokenSource = remember { CancellationTokenSource() }
     val geocoder = remember { Geocoder(context, Locale.getDefault()) }
     var currentLocation by remember { mutableStateOf<Location?>(null) }
     val locationPermissionLauncher = rememberLauncherForActivityResult(
@@ -85,8 +74,6 @@ fun MapScreenWithSearch(
             }
         }
     )
-    val rideUiState = viewModel.rideRequestUiState.collectAsState().value
-    val availableCars = viewModel.availableCars.collectAsState().value
 
     LaunchedEffect(key1 = Unit) {
         if (ActivityCompat.checkSelfPermission(
@@ -108,14 +95,6 @@ fun MapScreenWithSearch(
         }
     }
 
-    if (rideUiState.isSearchingForRide) {
-        RideSearchDialog(
-            message = rideUiState.searchMessage,
-            isError = rideUiState.isErrorSearch,
-            onDismissRequest = { viewModel.isDialogOpen(false) }
-        )
-    }
-
     BackHandler {
         onBack()
     }
@@ -123,7 +102,6 @@ fun MapScreenWithSearch(
     Surface {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             MapScreenWithModalBottomSheet(
-                city,
                 country,
                 modifier = modifier,
                 viewModel,
@@ -132,10 +110,10 @@ fun MapScreenWithSearch(
                 onNavItemClicked = {
                     onNavItemClicked(it)
                 },
+                onSearchPool = onSearchPool
             )
         } else {
             MapScreenWithBottomSheetScaffold(
-                city,
                 country,
                 modifier = modifier,
                 viewModel,
@@ -143,7 +121,8 @@ fun MapScreenWithSearch(
                 geocoder,
                 onNavItemClicked = {
                     onNavItemClicked(it)
-                }
+                },
+                onSearchPool = onSearchPool
             )
         }
 
