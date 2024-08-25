@@ -1,4 +1,4 @@
-package com.danoTech.carpool.ui.screens.request_ride.map
+package com.danoTech.carpool.ui.screens.map
 
 import com.danoTech.carpool.ui.screens.request_ride.RideRequestUiState
 import com.google.android.gms.maps.model.MapStyleOptions

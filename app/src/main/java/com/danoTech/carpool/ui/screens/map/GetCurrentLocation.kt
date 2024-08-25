@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:app/src/main/java/com/danoTech/carpool/ui/screens/map/GetCurrentLocation.kt
 package com.danoTech.carpool.ui.screens.map
-========
-package com.danoTech.carpool.ui.screens.request_ride.map
->>>>>>>> origin/master:app/src/main/java/com/danoTech/carpool/ui/screens/request_ride/map/GetCurrentLocation.kt
 
 import android.annotation.SuppressLint
 import android.location.Location

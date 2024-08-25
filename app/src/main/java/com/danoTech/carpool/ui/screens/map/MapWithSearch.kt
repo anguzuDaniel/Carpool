@@ -1,4 +1,4 @@
-package com.danoTech.carpool.ui.screens.request_ride.map
+package com.danoTech.carpool.ui.screens.map
 
   //noinspection UsingMaterialAndMaterial3Libraries
   //noinspection UsingMaterialAndMaterial3Libraries

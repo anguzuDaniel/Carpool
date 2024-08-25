@@ -6,9 +6,9 @@ import androidx.lifecycle.viewModelScope
 import com.danoTech.carpool.CarPoolViewModel
 import com.danoTech.carpool.model.service.AccountService
 import com.danoTech.carpool.model.service.StorageService
-import com.danoTech.carpool.ui.screens.request_ride.map.MapEvent
-import com.danoTech.carpool.ui.screens.request_ride.map.MapStyle
-import com.danoTech.carpool.ui.screens.request_ride.map.MapUiState
+import com.danoTech.carpool.ui.screens.map.MapEvent
+import com.danoTech.carpool.ui.screens.map.MapStyle
+import com.danoTech.carpool.ui.screens.map.MapUiState
 import com.google.android.gms.maps.model.MapStyleOptions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

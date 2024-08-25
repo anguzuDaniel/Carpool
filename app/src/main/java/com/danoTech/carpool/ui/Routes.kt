@@ -10,4 +10,5 @@ sealed class Routes(val route: String) {
     data object Home : Routes("Home")
     data object OfferRide : Routes("OfferRide")
     data object AvailableRides : Routes("Available Rides")
+    data object Chat : Routes("ChatUiState")
 }

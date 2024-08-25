@@ -1,4 +1,4 @@
-package com.danoTech.carpool.ui.screens.request_ride.map
+package com.danoTech.carpool.ui.screens.map
 
 import android.location.Geocoder
 import android.location.Location

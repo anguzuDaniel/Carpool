@@ -1,4 +1,4 @@
-package com.danoTech.carpool.ui.screens.request_ride.map
+package com.danoTech.carpool.ui.screens.map
 
 import android.location.Geocoder
 import android.location.Location
@@ -23,7 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.danoTech.carpool.ui.screens.request_ride.RideRequestViewModel
-import com.danoTech.carpool.ui.screens.request_ride.available_cars.CarpoolScreen
+import com.danoTech.carpool.ui.screens.available_cars.CarpoolScreen
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)

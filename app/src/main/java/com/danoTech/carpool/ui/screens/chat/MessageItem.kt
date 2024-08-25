@@ -2,6 +2,7 @@ package com.danoTech.carpool.ui.screens.chat
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import com.danoTech.carpool.model.Message
 
 @Composable
 fun MessageItem(message: Message) {

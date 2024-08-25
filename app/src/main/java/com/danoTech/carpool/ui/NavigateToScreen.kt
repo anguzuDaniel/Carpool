@@ -16,7 +16,8 @@ import com.danoTech.carpool.ui.screens.home.HomePage
 import com.danoTech.carpool.ui.screens.login.LoginPage
 import com.danoTech.carpool.ui.screens.offer_ride.AddRideScreen
 import com.danoTech.carpool.ui.screens.profile.ProfileScreen
-import com.danoTech.carpool.ui.screens.request_ride.available_cars.DisplayAvailableCarsScreen
+import com.danoTech.carpool.ui.screens.available_cars.DisplayAvailableCarsScreen
+import com.danoTech.carpool.ui.screens.chat.ChatScreen
 import com.danoTech.carpool.ui.screens.request_ride.RequestRideScreen
 import com.danoTech.carpool.ui.screens.signin.SignupScreen
 
@@ -145,6 +146,14 @@ fun NavigateToScreen(
                     navController.popBackStack()
                 },
                 destination = destination ?: ""
+            )
+        }
+
+        composable(Routes.Chat.route) {
+            ChatScreen(
+                onBackClicked = {
+                    navController.popBackStack()
+                }
             )
         }
     }

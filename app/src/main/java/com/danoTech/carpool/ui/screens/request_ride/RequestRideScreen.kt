@@ -5,7 +5,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.danoTech.carpool.ui.screens.request_ride.map.MapScreenWithSearch
+import com.danoTech.carpool.ui.screens.map.MapScreenWithSearch
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
