@@ -11,6 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.danoTech.carpool.ui.screens.IntroScreen
+import com.danoTech.carpool.ui.screens.available_cars.CarDisplayScreen
 import com.danoTech.carpool.ui.screens.forgot_password.ForgotPasswordScreen
 import com.danoTech.carpool.ui.screens.home.HomePage
 import com.danoTech.carpool.ui.screens.login.LoginPage
@@ -145,7 +146,10 @@ fun NavigateToScreen(
                 onBack = {
                     navController.popBackStack()
                 },
-                destination = destination ?: ""
+                destination = destination ?: "",
+                onCarClick = {
+                    navController.navigate("${Routes.CarDisplay.route}/${it}")
+                }
             )
         }
 
@@ -153,6 +157,23 @@ fun NavigateToScreen(
             ChatScreen(
                 onBackClicked = {
                     navController.popBackStack()
+                }
+            )
+        }
+
+        composable(
+            route = "${Routes.CarDisplay.route}/{carId}",
+            arguments = listOf(navArgument("carId") { type = NavType.StringType }),
+        ) { backStackEntry ->
+            val carId = backStackEntry.arguments?.getString("carId")
+
+            CarDisplayScreen(
+                carId = carId ?: "",
+                onBackClicked = {
+                    navController.popBackStack()
+                },
+                onChatClick = {
+
                 }
             )
         }

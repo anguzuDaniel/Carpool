@@ -32,4 +32,7 @@
     <string name="feilder">Feilder</string>
     <string name="number_plate">UG1234 J2</string>
     <string name="toyota">Toyota</string>
+    <string name="register">Register</string>
+    <string name="name">First Name</string>
+    <string name="register_driver">Register Driver</string>
 </resources>

@@ -4,6 +4,7 @@ import androidx.compose.ui.util.trace
 import com.danoTech.carpool.model.Car
 import com.danoTech.carpool.model.Message
 import com.danoTech.carpool.model.service.AccountService
+import com.danoTech.carpool.model.service.Driver
 import com.danoTech.carpool.model.service.StorageService
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -75,6 +76,19 @@ constructor(private val firestore: FirebaseFirestore, private val auth: AccountS
         firestore.collection(CHAT_MESSAGE_COLLECTION).add(chatMessage).await()
     }
 
+    override suspend fun getCars(): List<Car> {
+        val query = firestore.collection(CAR_COLLECTION)
+        val snapshot = query.get().await()
+        val cars = snapshot.toObjects(Car::class.java)
+        return cars
+    }
+
+    override suspend fun registerDriver(
+        driver: Driver
+    ) {
+        firestore.collection(DRIVER_COLLECTION).document(driver.id).set(driver).await()
+    }
+
     companion object {
         private const val USER_ID_FIELD = "userId"
         private const val DESTINATION_FIELD = "destination"
@@ -83,5 +97,6 @@ constructor(private val firestore: FirebaseFirestore, private val auth: AccountS
         private const val UPDATE_TASK_TRACE = "updateReview"
         private const val CHAT_MESSAGE_COLLECTION = "chat"
         private const val CAR_COLLECTION = "cars"
+        private const val DRIVER_COLLECTION = "drivers"
     }
 }

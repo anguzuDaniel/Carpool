@@ -8,7 +8,8 @@ import com.danoTech.carpool.ui.PageWithBackButton
 @Composable
 fun DisplayAvailableCarsScreen(
     onBack: () -> Unit,
-    destination: String
+    destination: String,
+    onCarClick: (String) -> Unit
 ) {
     PageWithBackButton(
         title = "Available Cars",
@@ -16,7 +17,8 @@ fun DisplayAvailableCarsScreen(
     ) { innerPadding ->
         DisplayCarPoolList(
             modifier = Modifier.padding(innerPadding),
-            destination = destination
+            destination = destination,
+            onCarClick = onCarClick
         )
     }
 }

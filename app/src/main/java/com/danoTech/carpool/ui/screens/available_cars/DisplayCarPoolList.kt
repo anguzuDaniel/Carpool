@@ -39,6 +39,7 @@ import java.util.Locale
 @Composable
 fun DisplayCarPoolList(
     destination: String,
+    onCarClick: (String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: RideRequestViewModel = hiltViewModel()
 ) {
@@ -69,7 +70,7 @@ fun DisplayCarPoolList(
             } else {
                 items(uiState.availableCars) { car ->
                     CarCardDisplay(
-                        onClick = {},
+                        onClick = onCarClick,
                         car = car
                     )
                 }
@@ -80,14 +81,14 @@ fun DisplayCarPoolList(
 
 @Composable
 fun CarCardDisplay(
-    onClick: () -> Unit = {},
+    onClick: (String) -> Unit = {},
     car: Car
 ) {
     Card(
         modifier = Modifier
             .padding(bottom = 16.dp)
             .fillMaxWidth()
-            .clickable { onClick() }
+            .clickable { onClick(car.id) }
     ) {
         Row(
             modifier = Modifier.padding(16.dp)

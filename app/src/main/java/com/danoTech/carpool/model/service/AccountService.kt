@@ -1,5 +1,6 @@
 package com.danoTech.carpool.model.service
 
+import com.danoTech.carpool.model.Car
 import com.danoTech.carpool.model.User
 import com.google.firebase.auth.AuthCredential
 import kotlinx.coroutines.flow.Flow
