@@ -6,7 +6,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.danoTech.carpool.R
 import com.danoTech.carpool.model.Car
+import com.danoTech.carpool.ui.screens.components.CarPoolButton
 
 @Composable
 fun CarDetailsScreen(
@@ -14,7 +16,7 @@ fun CarDetailsScreen(
     modifier: Modifier = Modifier,
     onCarClicked: () -> Unit = {},
     onBookClicked: () -> Unit = {},
-    onChatClick: () -> Unit = {}
+    onChatClick: (String) -> Unit = {}
 ) {
     Column(
         modifier = modifier
@@ -30,25 +32,22 @@ fun CarDetailsScreen(
         Spacer(modifier = Modifier.height(16.dp))
         Row(
             horizontalArrangement = Arrangement.spacedBy(20.dp),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Button(
-                onClick = onBookClicked,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp)
-            ) {
-                Text(text = "Book Now")
-            }
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp)
 
-            Button(
-                onClick = onChatClick,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp)
-            ) {
-                Text(text = "Chat with Driver")
-            }
+        ) {
+            CarPoolButton(
+                onClicked = onBookClicked,
+                name = R.string.book_now
+            )
+
+            CarPoolButton(
+                onClicked = {
+                    onChatClick(car.id)
+                },
+                name = R.string.chat_with_driver
+            )
         }
         Spacer(modifier = Modifier.height(16.dp))
         Row {

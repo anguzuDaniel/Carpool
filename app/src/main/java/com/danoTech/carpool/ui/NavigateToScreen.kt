@@ -19,6 +19,7 @@ import com.danoTech.carpool.ui.screens.offer_ride.AddRideScreen
 import com.danoTech.carpool.ui.screens.profile.ProfileScreen
 import com.danoTech.carpool.ui.screens.available_cars.DisplayAvailableCarsScreen
 import com.danoTech.carpool.ui.screens.chat.ChatScreen
+import com.danoTech.carpool.ui.screens.driver.RegisterDriverPage
 import com.danoTech.carpool.ui.screens.request_ride.RequestRideScreen
 import com.danoTech.carpool.ui.screens.signin.SignupScreen
 
@@ -153,11 +154,16 @@ fun NavigateToScreen(
             )
         }
 
-        composable(Routes.Chat.route) {
+        composable(
+            route = "${Routes.Chat.route}/{receiverId}",
+            arguments = listOf(navArgument("receiverId") { type = NavType.StringType }),
+        ) { backStackEntry ->
+            val receiverId = backStackEntry.arguments?.getString("receiverId")
             ChatScreen(
                 onBackClicked = {
                     navController.popBackStack()
-                }
+                },
+                receiverId = receiverId ?: ""
             )
         }
 
@@ -173,7 +179,15 @@ fun NavigateToScreen(
                     navController.popBackStack()
                 },
                 onChatClick = {
+                    navController.navigate("${Routes.Chat.route}/${it}")
+                }
+            )
+        }
 
+        composable(Routes.RegisterDriver.route) {
+            RegisterDriverPage(
+                onBackClicked = {
+                    navController.popBackStack()
                 }
             )
         }

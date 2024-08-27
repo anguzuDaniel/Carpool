@@ -1,18 +1,16 @@
 package com.danoTech.carpool.model.service.impl
 
 import androidx.compose.ui.util.trace
-import com.danoTech.carpool.model.Car
-import com.danoTech.carpool.model.service.AccountService
 import com.danoTech.carpool.model.User
-import com.danoTech.carpool.model.service.Driver
+import com.danoTech.carpool.model.service.AccountService
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
-import javax.inject.Inject
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -105,7 +103,6 @@ class AccountServiceImpl @Inject constructor(private val auth: FirebaseAuth) : A
                 }
         }
     }
-
 
     override suspend fun deleteAccount() {
         auth.currentUser!!.delete().await()

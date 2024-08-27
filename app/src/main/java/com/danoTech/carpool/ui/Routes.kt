@@ -12,4 +12,5 @@ sealed class Routes(val route: String) {
     data object AvailableRides : Routes("Available Rides")
     data object Chat : Routes("ChatUiState")
     data object CarDisplay : Routes("CarDisplay")
+    data object RegisterDriver : Routes("RegisterDriver")
 }

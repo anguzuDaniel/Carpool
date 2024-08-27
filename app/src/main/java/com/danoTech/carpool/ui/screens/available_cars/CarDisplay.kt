@@ -15,7 +15,7 @@ fun CarDisplayScreen(
     carId: String,
     onBackClicked: () -> Unit,
     modifier: Modifier = Modifier,
-    onChatClick: () -> Unit = {},
+    onChatClick: (String) -> Unit = {},
     viewModel: CarViewModel = hiltViewModel()
 ) {
     val carState = viewModel.cars.collectAsState().value

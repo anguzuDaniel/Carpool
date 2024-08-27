@@ -53,6 +53,7 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
             excludes += "META-INF/gradle/incremental.annotation.processors"
+            excludes += "META-INF/versions/9/OSGI-INF/MANIFEST.MF"
         }
     }
     composeCompiler {
@@ -71,7 +72,7 @@ dependencies {
     implementation(libs.com.google.firebase.firebase.analytics)
 
     implementation(libs.androidx.material)
-    implementation("androidx.compose.material:material-icons-extended")
+    implementation(libs.androidx.material.icons.extended)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -86,6 +87,7 @@ dependencies {
     // Dagger
     implementation(libs.dagger)
     implementation(libs.hilt.android)
+    implementation(libs.identity.jvm)
     ksp(libs.dagger.compiler)
     ksp(libs.hilt.compiler)
     implementation(libs.com.google.devtools.ksp.gradle.plugin)

@@ -11,8 +11,8 @@ interface StorageService {
     suspend fun update(car: Car)
     suspend fun delete(carId: String)
     suspend fun getAvailableRide(destination: String): Flow<List<Car>>
-    suspend fun getChatMessages(): Flow<List<Message?>>
-    suspend fun addChatMessage(userId: String, message: String)
+    suspend fun getChatMessages(receiverId: String, userId: String): Flow<List<Message?>>
+    suspend fun addChatMessage(message: Message)
     suspend fun getCars(): List<Car>
     suspend fun registerDriver(driver: Driver)
 }

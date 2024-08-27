@@ -61,19 +61,28 @@ constructor(private val firestore: FirebaseFirestore, private val auth: AccountS
             }
     }
 
-    override suspend fun getChatMessages(): Flow<List<Message?>> {
-        return firestore.collection(CHAT_MESSAGE_COLLECTION)
+    override suspend fun getChatMessages(receiverId: String, userId: String): Flow<List<Message?>> {
+        val messagesRef = firestore.collection(MESSAGE_COLLECTION)
+            .whereEqualTo(SENDER_ID_FIELD, userId)
+            .whereEqualTo(RECEIVER_ID_FIELD, receiverId)
             .snapshots()
-            .map { snapshot ->
-                snapshot.documents.map { document ->
-                    document.toObject(Message::class.java)
-                }
+
+        return messagesRef.map { snapshot ->
+            snapshot.documents.mapNotNull { document ->
+                document.toObject(Message::class.java)
             }
+        }
     }
 
-    override suspend fun addChatMessage(userId: String, message: String) {
-        val chatMessage = Message(senderId = userId, content = message)
-        firestore.collection(CHAT_MESSAGE_COLLECTION).add(chatMessage).await()
+    override suspend fun addChatMessage(message: Message) {
+        val chatMessage = Message(
+            conversationId = message.conversationId,
+            senderId = message.senderId,
+            receiverId = message.receiverId,
+            content = message.content
+        )
+
+        firestore.collection(MESSAGE_COLLECTION).add(chatMessage).await()
     }
 
     override suspend fun getCars(): List<Car> {
@@ -95,8 +104,13 @@ constructor(private val firestore: FirebaseFirestore, private val auth: AccountS
         private const val REVIEW_COLLECTION = "reviews"
         private const val SAVE_TASK_TRACE = "saveCar"
         private const val UPDATE_TASK_TRACE = "updateReview"
-        private const val CHAT_MESSAGE_COLLECTION = "chat"
+        private const val MESSAGE_COLLECTION = "messages"
+        private const val CONVERSATION_COLLECTION = "conversations"
         private const val CAR_COLLECTION = "cars"
+        private const val CONVERSATION_ID_FEIlD = "conversationId"
+        private const val DRIVER_ID_FIELD = "driverId"
+        private const val SENDER_ID_FIELD = "senderId"
+        private const val RECEIVER_ID_FIELD = "receiverId"
         private const val DRIVER_COLLECTION = "drivers"
     }
 }
