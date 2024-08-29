@@ -47,9 +47,7 @@ fun ProfileScreen(
             fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.titleLarge
         )
-        // Add other profile details here, like phone number, email, etc.
         Spacer(modifier = Modifier.height(32.dp))
-        // Add ride history or other sections here
     }
 }
 

@@ -36,4 +36,5 @@
     <string name="name">First Name</string>
     <string name="register_driver">Register Driver</string>
     <string name="chat_with_driver">Chat with Driver</string>
+    <string name="repeat_password">Repeat password</string>
 </resources>

@@ -43,7 +43,7 @@ class LoginViewModel @Inject constructor(
                     message = "Login successful! Redirecting..."
                 )
 
-                openAndPopUp(Routes.Login.route, Routes.Home.route)
+                openAndPopUp(Routes.Login.route, Routes.RequestRide.route)
             } catch (e: FirebaseAuthInvalidUserException) {
                 _uiState.value = _uiState.value.copy(
                     isSignInSuccess = false,

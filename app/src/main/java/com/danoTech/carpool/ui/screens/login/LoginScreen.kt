@@ -11,9 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,17 +20,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.danoTech.carpool.R
 import com.danoTech.carpool.ui.screens.components.ButtonWithLoader
+import com.danoTech.carpool.ui.screens.components.EmailField
 import com.danoTech.carpool.ui.screens.components.ErrorText
-import com.danoTech.carpool.ui.screens.components.TextInput
+import com.danoTech.carpool.ui.screens.components.PasswordField
 
 @Composable
 fun LoginPage(
@@ -77,23 +73,17 @@ fun LoginPage(
         }
 
         Spacer(modifier = Modifier.height(20.dp))
-        TextInput(
-            labelText = stringResource(R.string.username),
+        EmailField(
             value = uiState.email,
-            leadingIcon = Icons.Filled.Email,
             onValueChanged = {
                 loginPageViewModel.onEmailChanged(it)
             }
         )
 
         Spacer(modifier = Modifier.height(20.dp))
-        TextInput(
-            labelText = stringResource(R.string.password),
+        PasswordField(
             value = uiState.password,
-            leadingIcon = Icons.Filled.Lock,
-            onValueChanged = {
-                loginPageViewModel.onPasswordChanged(it)
-            }
+            onValueChanged = { loginPageViewModel.onPasswordChanged(it) }
         )
 
         LaunchedEffect(key1 = uiState.isSignInSuccess) {

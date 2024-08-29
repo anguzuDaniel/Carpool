@@ -11,9 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,17 +19,17 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.danoTech.carpool.R
 import com.danoTech.carpool.ui.screens.components.ButtonWithLoader
+import com.danoTech.carpool.ui.screens.components.EmailField
 import com.danoTech.carpool.ui.screens.components.ErrorText
-import com.danoTech.carpool.ui.screens.components.TextInput
+import com.danoTech.carpool.ui.screens.components.PasswordField
+import com.danoTech.carpool.ui.screens.components.RepeatPasswordField
 
 @Composable
 fun SignupScreen(
@@ -86,35 +83,13 @@ fun SignupScreen(
         }
 
         Spacer(modifier = Modifier.height(20.dp))
-
-        TextInput(
-            labelText = stringResource(R.string.username),
-            value = uiState.email,
-            leadingIcon = Icons.Filled.Email,
-            onValueChanged = {
-                signupViewModel.onEmailChanged(it)
-            }
-        )
+        EmailField(value = uiState.email, onValueChanged = { signupViewModel.onEmailChanged(it) })
 
         Spacer(modifier = Modifier.height(20.dp))
-        TextInput(
-            labelText = stringResource(R.string.password),
-            value = uiState.password,
-            leadingIcon = Icons.Filled.Lock,
-            onValueChanged = {
-                signupViewModel.onPasswordChanged(it)
-            }
-        )
+        PasswordField(value = uiState.password, onValueChanged = { signupViewModel.onPasswordChanged(it) })
 
         Spacer(modifier = Modifier.height(20.dp))
-        TextInput(
-            labelText = stringResource(R.string.confirm_password),
-            value = uiState.confirmPassword,
-            leadingIcon = Icons.Filled.Lock,
-            onValueChanged = {
-                signupViewModel.onConfirmPasswordChanged(it)
-            }
-        )
+        RepeatPasswordField(value = uiState.confirmPassword, onValueChanged = { signupViewModel.onConfirmPasswordChanged(it) })
 
         Spacer(modifier = Modifier.height(20.dp))
         ButtonWithLoader(

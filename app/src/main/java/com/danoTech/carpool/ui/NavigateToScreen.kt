@@ -38,7 +38,7 @@ fun NavigateToScreen(
         composable(Routes.Intro.route) {
             IntroScreen(
                 onSigningButtonClick = {
-                    navController.navigate(Routes.RequestRide.route)
+                    navController.navigate(Routes.Login.route)
                 },
                 onSignupButtonClick = {
                     navController.navigate(Routes.Signup.route)

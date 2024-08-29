@@ -11,6 +11,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -182,7 +183,7 @@ fun EmailField(
         placeholder = {
             Text(
                 text = stringResource(R.string.email),
-                style = MaterialTheme.typography.labelSmall
+                style = MaterialTheme.typography.titleMedium
             )
         },
         leadingIcon = {
