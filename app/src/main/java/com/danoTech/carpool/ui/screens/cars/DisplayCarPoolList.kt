@@ -1,4 +1,4 @@
-package com.danoTech.carpool.ui.screens.available_cars
+package com.danoTech.carpool.ui.screens.cars
 
 import android.util.Log
 import androidx.compose.foundation.Image

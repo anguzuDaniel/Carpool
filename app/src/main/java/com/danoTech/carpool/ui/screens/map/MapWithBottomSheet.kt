@@ -23,7 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.danoTech.carpool.ui.screens.request_ride.RideRequestViewModel
-import com.danoTech.carpool.ui.screens.available_cars.CarpoolScreen
+import com.danoTech.carpool.ui.screens.cars.CarpoolScreen
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -86,7 +86,7 @@ fun MapScreenWithModalBottomSheet(
                     onNavItemClicked(it)
                 },
                 onDestinationChanged = {
-                    viewModel.onDestinationChanged(it)
+                    viewModel.onDestinationChanged(it.lowercase())
                 },
                 onSearchCarPool = {
 //                    viewModel.searchForCarpool()

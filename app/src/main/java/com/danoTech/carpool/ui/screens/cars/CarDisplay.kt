@@ -1,13 +1,11 @@
-package com.danoTech.carpool.ui.screens.available_cars
+package com.danoTech.carpool.ui.screens.cars
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.danoTech.carpool.model.Car
 import com.danoTech.carpool.ui.PageWithBackButton
 
 @Composable
@@ -25,8 +23,8 @@ fun CarDisplayScreen(
         if (car != null) {
             CarDetailsScreen(
                 car = car,
-                onChatClick = onChatClick,
-                modifier = modifier.padding(innerPadding)
+                modifier = modifier.padding(innerPadding),
+                onChatClick = onChatClick
             )
         } else {
             Box(modifier = Modifier.fillMaxSize()) {

@@ -11,13 +11,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.danoTech.carpool.ui.screens.IntroScreen
-import com.danoTech.carpool.ui.screens.available_cars.CarDisplayScreen
+import com.danoTech.carpool.ui.screens.cars.CarDisplayScreen
 import com.danoTech.carpool.ui.screens.forgot_password.ForgotPasswordScreen
 import com.danoTech.carpool.ui.screens.home.HomePage
 import com.danoTech.carpool.ui.screens.login.LoginPage
 import com.danoTech.carpool.ui.screens.offer_ride.AddRideScreen
 import com.danoTech.carpool.ui.screens.profile.ProfileScreen
-import com.danoTech.carpool.ui.screens.available_cars.DisplayAvailableCarsScreen
+import com.danoTech.carpool.ui.screens.cars.DisplayAvailableCarsScreen
 import com.danoTech.carpool.ui.screens.chat.ChatScreen
 import com.danoTech.carpool.ui.screens.driver.RegisterDriverPage
 import com.danoTech.carpool.ui.screens.request_ride.RequestRideScreen
@@ -32,7 +32,7 @@ fun NavigateToScreen(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Routes.RequestRide.route,
+        startDestination = Routes.Intro.route,
         modifier = modifier
     ) {
         composable(Routes.Intro.route) {

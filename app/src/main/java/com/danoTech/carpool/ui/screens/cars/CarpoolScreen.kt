@@ -1,4 +1,4 @@
-package com.danoTech.carpool.ui.screens.available_cars
+package com.danoTech.carpool.ui.screens.cars
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
