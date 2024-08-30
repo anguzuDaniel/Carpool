@@ -12,5 +12,11 @@ data class RideRequestUiState(
     val price: String = "",
     val numberOfSeats: Int = 0,
     var isSearchingForRide: Boolean = false,
-    var isErrorSearch: Boolean = false
+    var isErrorSearch: Boolean = false,
+    val isCarpoolStarted: Boolean = false,
+    val isRideRequested: Boolean = false,
+    val carpoolMessage: String = "",
+    val rideRequestMessage: String = "",
+    val currentCarpool: Car? = null,
+    val passengers: List<String> = emptyList()
 )

@@ -122,6 +122,54 @@ class RideRequestViewModel
         )
     }
 
+    // Request a ride for an existing carpool
+    fun requestRide(carpoolId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                storageService.requestRide(carpoolId, accountService.currentUser)
+                _rideUiState.value = _rideUiState.value.copy(
+                    isRideRequested = true,
+                    rideRequestMessage = "Ride requested successfully!"
+                )
+            } catch (exception: Exception) {
+                _rideUiState.value = _rideUiState.value.copy(
+                    isRideRequested = false,
+                    rideRequestMessage = "Failed to request ride. ${exception.message}",
+                    isErrorSearch = true
+                )
+                Log.e("Request Ride", "Error: ${exception.message}")
+            }
+        }
+    }
+
+    fun isUserInActiveCarpool(userId: String): Boolean {
+        val currentCarpool = _rideUiState.value.currentCarpool
+        return currentCarpool?.isActive == true && currentCarpool.passengers.any { it == userId }
+    }
+
+    fun joinCarpool(carpoolId: String, userId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val carpool = storageService.getCarpool(carpoolId).first()
+            carpool?.let {
+                if (it.seatsAvailable > 0) {
+                    val updatedPassengers = it.passengers + userId
+                    val updatedCarpool = it.copy(passengers = updatedPassengers, seatsAvailable = it.seatsAvailable - 1)
+
+                    storageService.updateCarpool(updatedCarpool)
+
+                    _rideUiState.value = _rideUiState.value.copy(
+                        currentCarpool = updatedCarpool,
+                        carpoolMessage = "Joined the carpool successfully!"
+                    )
+                } else {
+                    _rideUiState.value = _rideUiState.value.copy(
+                        carpoolMessage = "No seats available in this carpool."
+                    )
+                }
+            }
+        }
+    }
+
     companion object {
         private const val TIMEOUT_MILLIS = 5_000L
     }

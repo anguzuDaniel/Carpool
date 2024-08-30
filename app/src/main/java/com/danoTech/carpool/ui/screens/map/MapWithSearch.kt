@@ -19,7 +19,6 @@ package com.danoTech.carpool.ui.screens.map
   import androidx.compose.foundation.layout.fillMaxWidth
   import androidx.compose.foundation.layout.padding
   import androidx.compose.material.icons.Icons
-  import androidx.compose.material.icons.filled.Notifications
   import androidx.compose.material.icons.twotone.Menu
   import androidx.compose.material3.Icon
   import androidx.compose.material3.IconButton
@@ -28,6 +27,7 @@ package com.danoTech.carpool.ui.screens.map
   import androidx.compose.material3.Surface
   import androidx.compose.runtime.Composable
   import androidx.compose.runtime.LaunchedEffect
+  import androidx.compose.runtime.collectAsState
   import androidx.compose.runtime.getValue
   import androidx.compose.runtime.mutableStateOf
   import androidx.compose.runtime.remember
@@ -41,7 +41,6 @@ package com.danoTech.carpool.ui.screens.map
   import com.danoTech.carpool.ui.screens.request_ride.RideRequestViewModel
   import com.google.android.gms.location.LocationServices
   import java.util.Locale
-
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -61,6 +60,7 @@ fun MapScreenWithSearch(
     val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
     val geocoder = remember { Geocoder(context, Locale.getDefault()) }
     var currentLocation by remember { mutableStateOf<Location?>(null) }
+    val uiState = viewModel.rideRequestUiState.collectAsState().value
     val locationPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { isGranted ->
@@ -110,7 +110,8 @@ fun MapScreenWithSearch(
                 onNavItemClicked = {
                     onNavItemClicked(it)
                 },
-                onSearchPool = onSearchPool
+                onSearchPool = onSearchPool,
+                isInCarpool = uiState.isCarpoolStarted
             )
         } else {
             MapScreenWithBottomSheetScaffold(
@@ -122,7 +123,8 @@ fun MapScreenWithSearch(
                 onNavItemClicked = {
                     onNavItemClicked(it)
                 },
-                onSearchPool = onSearchPool
+                onSearchPool = onSearchPool,
+                isInCarpool = uiState.isCarpoolStarted
             )
         }
 
@@ -143,19 +145,6 @@ fun MapScreenWithSearch(
                 ) {
                     Icon(
                         imageVector = Icons.TwoTone.Menu,
-                        contentDescription = "Menu",
-                        tint = MaterialTheme.colorScheme.onBackground
-                    )
-                }
-
-                IconButton(
-                    onClick = openDrawerNavigation,
-                    colors = IconButtonDefaults.iconButtonColors(
-                        containerColor = MaterialTheme.colorScheme.background
-                    )
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Notifications,
                         contentDescription = "Menu",
                         tint = MaterialTheme.colorScheme.onBackground
                     )

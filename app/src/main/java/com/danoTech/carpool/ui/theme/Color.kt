@@ -1,7 +1,7 @@
 package com.danoTech.carpool.ui.theme
 import androidx.compose.ui.graphics.Color
 
-val primaryLight = Color(0xFF00696C)
+val primaryLight = Color(0xFF004B4D)
 val onPrimaryLight = Color(0xFFFFFFFF)
 val primaryContainerLight = Color(0xFF9CF1F3)
 val onPrimaryContainerLight = Color(0xFF002021)
@@ -109,7 +109,7 @@ val surfaceContainerLightHighContrast = Color(0xFFE9EFEF)
 val surfaceContainerHighLightHighContrast = Color(0xFFE3E9E9)
 val surfaceContainerHighestLightHighContrast = Color(0xFFDDE4E3)
 
-val primaryDark = Color(0xFF80D4D7)
+val primaryDark = Color(0xFF004B4D)
 val onPrimaryDark = Color(0xFF003738)
 val primaryContainerDark = Color(0xFF004F51)
 val onPrimaryContainerDark = Color(0xFF9CF1F3)
@@ -145,7 +145,7 @@ val surfaceContainerDark = Color(0xFF1A2121)
 val surfaceContainerHighDark = Color(0xFF252B2B)
 val surfaceContainerHighestDark = Color(0xFF2F3636)
 
-val primaryDarkMediumContrast = Color(0xFF84D9DB)
+val primaryDarkMediumContrast = Color(0xFF004B4D)
 val onPrimaryDarkMediumContrast = Color(0xFF001A1B)
 val primaryContainerDarkMediumContrast = Color(0xFF479DA0)
 val onPrimaryContainerDarkMediumContrast = Color(0xFF000000)

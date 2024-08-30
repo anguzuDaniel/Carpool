@@ -53,7 +53,7 @@ fun NavigateToScreen(
                     navController.navigate(Routes.ForgotPassword.route)
                 },
                 onSignUpClick = {
-                    navController.navigate(Routes.Login.route)
+                    navController.navigate(Routes.Signup.route)
                 },
                 onPopBackStack = { from, to ->
                     navController.navigate(to) {
@@ -110,6 +110,9 @@ fun NavigateToScreen(
                         launchSingleTop = true
                         popUpTo(from) { inclusive = true }
                     }
+                },
+                onSignupClick = {
+                    navController.navigate(Routes.Login.route)
                 }
             )
         }
@@ -150,6 +153,9 @@ fun NavigateToScreen(
                 destination = destination ?: "",
                 onCarClick = {
                     navController.navigate("${Routes.CarDisplay.route}/${it}")
+                },
+                onChatClick = {
+                    navController.navigate("${Routes.Chat.route}/${it}")
                 }
             )
         }

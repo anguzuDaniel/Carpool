@@ -2,7 +2,6 @@ package com.danoTech.carpool.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,6 +12,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,11 +28,11 @@ import com.danoTech.carpool.R
 
 @Composable
 fun IntroScreen(
+    modifier: Modifier = Modifier,
     onSigningButtonClick: () -> Unit = {},
     onSignupButtonClick: () -> Unit = {},
-    modifier: Modifier = Modifier
 ) {
-    Box(
+    Surface(
         modifier = modifier.fillMaxSize(),
     ) {
         Column(
@@ -46,13 +46,15 @@ fun IntroScreen(
                 Text(
                     text = stringResource(R.string.welcome),
                     fontSize = 40.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
                 )
 
                 Text(
                     text = stringResource(R.string.intro_message),
                     fontSize = 20.sp,
-                    modifier = Modifier.alpha(.3f)
+                    modifier = Modifier.alpha(.3f),
+                    color = MaterialTheme.colorScheme.onBackground
                 )
             }
 

@@ -15,6 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.danoTech.carpool.model.Car
+import com.danoTech.carpool.ui.screens.map.OngoingCarpoolStatus
 import com.danoTech.carpool.ui.screens.request_ride.RideConfirmationScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -29,7 +30,9 @@ fun CarpoolScreen(
     onNavItemClick: (String) -> Unit = {},
     onDestinationChanged: (String) -> Unit = {},
     onSearchCarPool: (String) -> Unit = {},
-    availableCars: List<Car>
+    availableCars: List<Car>,
+    isInCarpool: Boolean = false,
+    onCancelCarpool: () -> Unit = {}
 ) {
     val sheetState = rememberStandardBottomSheetState(
         initialValue = SheetValue.PartiallyExpanded,
@@ -46,20 +49,28 @@ fun CarpoolScreen(
             Column(
                 modifier = Modifier.padding(start = 16.dp, end = 16.dp)
             ) {
-                RideConfirmationScreen(
-                    pickupLocation = pickupLocation,
-                    numberOfSeats = numberOfSeats,
-                    estimatedTime = estimatedTime,
-                    price = price,
-                    destination = destination,
-                    onConfirmRide = {},
-                    onDestinationChanged = {
-                        onDestinationChanged(it.lowercase())
-                    },
-                    onSearchCarPool = {
-                        onSearchCarPool(it)
-                    }
-                )
+                if (isInCarpool) {
+                    OngoingCarpoolStatus(
+                        pickupLocation = pickupLocation,
+                        destination = destination,
+                        onCancelCarpool = onCancelCarpool
+                    )
+                } else {
+                    RideConfirmationScreen(
+                        pickupLocation = pickupLocation,
+                        numberOfSeats = numberOfSeats,
+                        estimatedTime = estimatedTime,
+                        price = price,
+                        destination = destination,
+                        onConfirmRide = {},
+                        onDestinationChanged = {
+                            onDestinationChanged(it.lowercase())
+                        },
+                        onSearchCarPool = {
+                            onSearchCarPool(it)
+                        }
+                    )
+                }
             }
         },
         sheetShape = RoundedCornerShape(

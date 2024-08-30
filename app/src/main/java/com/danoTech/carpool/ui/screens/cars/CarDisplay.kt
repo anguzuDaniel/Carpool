@@ -24,7 +24,8 @@ fun CarDisplayScreen(
             CarDetailsScreen(
                 car = car,
                 modifier = modifier.padding(innerPadding),
-                onChatClick = onChatClick
+                onChatClick = onChatClick,
+
             )
         } else {
             Box(modifier = Modifier.fillMaxSize()) {

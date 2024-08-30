@@ -4,10 +4,10 @@ import android.app.Activity
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.ClickableText
@@ -18,7 +18,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
@@ -36,37 +35,35 @@ fun LoginPage(
     onPopBackStack: (String, String) -> Unit,
     onForgotPasswordClick: () -> Unit,
     onSignUpClick: () -> Unit,
-    loginPageViewModel: LoginViewModel = hiltViewModel(),
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    loginPageViewModel: LoginViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current as Activity
     val uiState = loginPageViewModel.uiState.collectAsState().value
 
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        ClickableText(
-            text = AnnotatedString("Sign up here"),
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(16.dp),
-            onClick = {
-                onSignUpClick()
-            },
-            style = TextStyle(
-                fontSize = 16.sp,
-                fontFamily = FontFamily.Default,
-                color = Color.Magenta
-            )
-        )
-    }
-
     Column(
-        modifier = modifier.padding(16.dp),
+        modifier = modifier.padding(vertical = 40.dp, horizontal = 16.dp),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.Start
     ) {
-        Text(text = "Login", style = TextStyle(fontSize = 40.sp, fontFamily = FontFamily.Cursive))
+        Text(text = "Login", style = TextStyle(fontSize = 40.sp))
+
+        Row(modifier = Modifier.padding(top = 16.dp)) {
+            Text(text = "Don't have an account? ", style = TextStyle(fontSize = 16.sp, fontFamily = FontFamily.Default))
+
+            ClickableText(
+                text = AnnotatedString("Sign up here"),
+                modifier = Modifier,
+                onClick = {
+                    onSignUpClick()
+                },
+                style = TextStyle(
+                    fontSize = 16.sp,
+                    fontFamily = FontFamily.Default,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            )
+        }
 
         AnimatedVisibility(visible = uiState.hasMessage) {
             ErrorText(text = uiState.message)
@@ -119,7 +116,7 @@ fun LoginPage(
                 fontSize = 14.sp,
                 fontFamily = FontFamily.Default
             ),
-            modifier = Modifier.padding(bottom = 16.dp)
+            modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp).align(Alignment.End)
         )
     }
 }

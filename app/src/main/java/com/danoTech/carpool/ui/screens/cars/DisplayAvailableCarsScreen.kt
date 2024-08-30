@@ -9,7 +9,9 @@ import com.danoTech.carpool.ui.PageWithBackButton
 fun DisplayAvailableCarsScreen(
     onBack: () -> Unit,
     destination: String,
-    onCarClick: (String) -> Unit
+    onCarClick: (String) -> Unit,
+    onChatClick: (String) -> Unit = {},
+    onRequestPoolClick: (String) -> Unit = {}
 ) {
     PageWithBackButton(
         title = "Available Cars",
@@ -18,7 +20,9 @@ fun DisplayAvailableCarsScreen(
         DisplayCarPoolList(
             modifier = Modifier.padding(innerPadding),
             destination = destination,
-            onCarClick = onCarClick
+            onCarClick = onCarClick,
+            onChatClick = onChatClick,
+            onRequestPoolClick = onRequestPoolClick
         )
     }
 }

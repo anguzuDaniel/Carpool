@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.danoTech.carpool.ui.screens.request_ride.RideRequestViewModel
 import com.danoTech.carpool.ui.screens.cars.CarpoolScreen
+import com.danoTech.carpool.ui.screens.components.LoadingPage
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -36,7 +37,8 @@ fun MapScreenWithModalBottomSheet(
     currentLocation: Location?,
     geocoder: Geocoder,
     onNavItemClicked: (String) -> Unit,
-    onSearchPool: (String) -> Unit
+    onSearchPool: (String) -> Unit,
+    isInCarpool: Boolean = false
 ) {
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
@@ -57,46 +59,53 @@ fun MapScreenWithModalBottomSheet(
         }
     }
 
-    Column(
-        modifier = modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        currentLocation?.let { location ->
-            val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
-            val address = addresses?.firstOrNull()
-            val locationName = address?.featureName ?: ""
+    if (uiState.isLoading) {
+        LoadingPage(modifier = Modifier.fillMaxSize())
+    } else {
+        Column(
+            modifier = modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            currentLocation?.let { location ->
+                val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
+                val address = addresses?.firstOrNull()
+                val locationName = address?.featureName ?: ""
 
-            Box {
-                MapDisplay(
-                    viewModel = viewModel,
-                    country = country,
-                    currentLocation = location,
-                    modifier = Modifier.fillMaxHeight(.55f)
+                Box {
+                    MapDisplay(
+                        viewModel = viewModel,
+                        country = country,
+                        currentLocation = location,
+                        modifier = Modifier.fillMaxHeight(.55f)
+                    )
+                }
+
+                CarpoolScreen(
+                    modifier = Modifier.fillMaxHeight(.5f),
+                    pickupLocation = locationName,
+                    estimatedTime = rideRequestState.estimatedTime,
+                    numberOfSeats = rideRequestState.numberOfSeats,
+                    price = rideRequestState.price,
+                    destination = uiState.destination,
+                    onNavItemClick = {
+                        onNavItemClicked(it)
+                    },
+                    onDestinationChanged = {
+                        viewModel.onDestinationChanged(it.lowercase())
+                    },
+                    onSearchCarPool = {
+//                    viewModel.searchForCarpool()
+                        onSearchPool(uiState.destination)
+                    },
+                    availableCars = rideRequestState.availableCars,
+                    isInCarpool = isInCarpool,
+                    onCancelCarpool = {
+                        showConfirmationDialog = true
+                    }
                 )
             }
-
-            CarpoolScreen(
-                modifier = Modifier.fillMaxHeight(.5f),
-                pickupLocation = locationName,
-                estimatedTime = rideRequestState.estimatedTime,
-                numberOfSeats = rideRequestState.numberOfSeats,
-                price = rideRequestState.price,
-                destination = uiState.destination,
-                onNavItemClick = {
-                    onNavItemClicked(it)
-                },
-                onDestinationChanged = {
-                    viewModel.onDestinationChanged(it.lowercase())
-                },
-                onSearchCarPool = {
-//                    viewModel.searchForCarpool()
-                    onSearchPool(uiState.destination)
-                },
-                availableCars = rideRequestState.availableCars
-            )
         }
     }
-
 }
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -109,7 +118,8 @@ fun MapScreenWithBottomSheetScaffold(
     currentLocation: Location?,
     geocoder: Geocoder,
     onNavItemClicked: (String) -> Unit,
-    onSearchPool: (String) -> Unit
+    onSearchPool: (String) -> Unit,
+    isInCarpool: Boolean = false
 ) {
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
@@ -130,43 +140,51 @@ fun MapScreenWithBottomSheetScaffold(
         }
     }
 
-    Column(
-        modifier = modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        currentLocation?.let { location ->
-            val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
-            val address = addresses?.firstOrNull()
-            val locationName = address?.featureName ?: ""
+    if (uiState.isLoading) {
+        LoadingPage(modifier = Modifier.fillMaxSize())
+    } else {
+        Column(
+            modifier = modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            currentLocation?.let { location ->
+                val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
+                val address = addresses?.firstOrNull()
+                val locationName = address?.featureName ?: ""
 
-            Box {
-                MapDisplay(
-                    viewModel = viewModel,
-                    country = country,
-                    currentLocation = location,
-                    modifier = Modifier.fillMaxHeight(.55f)
+                Box {
+                    MapDisplay(
+                        viewModel = viewModel,
+                        country = country,
+                        currentLocation = location,
+                        modifier = Modifier.fillMaxHeight(.55f)
+                    )
+                }
+
+                CarpoolScreen(
+                    modifier = Modifier.fillMaxHeight(.5f),
+                    pickupLocation = locationName,
+                    estimatedTime = rideRequestState.estimatedTime,
+                    numberOfSeats = rideRequestState.numberOfSeats,
+                    price = rideRequestState.price,
+                    destination = uiState.destination,
+                    onNavItemClick = {
+                        onNavItemClicked(it)
+                    },
+                    onDestinationChanged = {
+                        viewModel.onDestinationChanged(it.lowercase())
+                    },
+                    onSearchCarPool = {
+//                    viewModel.searchForCarpool()
+                        onSearchPool(uiState.destination)
+                    },
+                    availableCars = rideRequestState.availableCars,
+                    isInCarpool = isInCarpool,
+                    onCancelCarpool = {
+                        showConfirmationDialog = true
+                    }
                 )
             }
-
-            CarpoolScreen(
-                modifier = Modifier.fillMaxHeight(.5f),
-                pickupLocation = locationName,
-                estimatedTime = rideRequestState.estimatedTime,
-                numberOfSeats = rideRequestState.numberOfSeats,
-                price = rideRequestState.price,
-                destination = uiState.destination,
-                onNavItemClick = {
-                    onNavItemClicked(it)
-                },
-                onDestinationChanged = {
-                    viewModel.onDestinationChanged(it.lowercase())
-                },
-                onSearchCarPool = {
-//                    viewModel.searchForCarpool()
-                    onSearchPool(uiState.destination)
-                },
-                availableCars = rideRequestState.availableCars
-            )
         }
     }
 }

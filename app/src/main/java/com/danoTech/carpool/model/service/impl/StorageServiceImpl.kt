@@ -98,6 +98,35 @@ constructor(private val firestore: FirebaseFirestore, private val auth: AccountS
         firestore.collection(DRIVER_COLLECTION).document(driver.id).set(driver).await()
     }
 
+    override suspend fun <User> requestRide(carpoolId: String, currentUser: Flow<User>) {
+        val carpoolRef = firestore.collection(CAR_COLLECTION).document(carpoolId)
+
+        // Fetch the current carpool data
+        val carpool = carpoolRef.get().await().toObject(Car::class.java)
+
+        carpool?.let {
+            val updatedPassengers = it.passengers
+
+            // Update the carpool with the new passenger
+            carpoolRef.update("passengers", updatedPassengers).await()
+
+            // Update available seats
+            carpoolRef.update("seatsAvailable", it.seatsAvailable - 1).await()
+        }
+    }
+
+    override suspend fun getCarpool(carpoolId: String): Flow<Car?> {
+        return firestore.collection(CAR_COLLECTION).document(carpoolId)
+            .snapshots()
+            .map { snapshot -> snapshot.toObject(Car::class.java) }
+    }
+
+    override suspend fun updateCarpool(updatedCarpool: Car) {
+        firestore.collection(CAR_COLLECTION).document(updatedCarpool.id)
+            .set(updatedCarpool)
+            .await()
+    }
+
     companion object {
         private const val USER_ID_FIELD = "userId"
         private const val DESTINATION_FIELD = "destination"
@@ -105,7 +134,6 @@ constructor(private val firestore: FirebaseFirestore, private val auth: AccountS
         private const val SAVE_TASK_TRACE = "saveCar"
         private const val UPDATE_TASK_TRACE = "updateReview"
         private const val MESSAGE_COLLECTION = "messages"
-        private const val CONVERSATION_COLLECTION = "conversations"
         private const val CAR_COLLECTION = "cars"
         private const val CONVERSATION_ID_FEIlD = "conversationId"
         private const val DRIVER_ID_FIELD = "driverId"
