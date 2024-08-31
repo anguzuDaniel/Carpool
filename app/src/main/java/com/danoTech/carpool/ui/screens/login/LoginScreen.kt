@@ -42,14 +42,23 @@ fun LoginPage(
     val uiState = loginPageViewModel.uiState.collectAsState().value
 
     Column(
-        modifier = modifier.padding(vertical = 40.dp, horizontal = 16.dp),
+        modifier = modifier.padding(vertical = 60.dp, horizontal = 16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.Start
     ) {
-        Text(text = "Login", style = TextStyle(fontSize = 40.sp))
+        Text(
+            text = "Login",
+            style = MaterialTheme.typography.titleLarge
+        )
 
-        Row(modifier = Modifier.padding(top = 16.dp)) {
-            Text(text = "Don't have an account? ", style = TextStyle(fontSize = 16.sp, fontFamily = FontFamily.Default))
+        Row(
+            modifier = Modifier.padding(top = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Don't have an account? ",
+                style = MaterialTheme.typography.bodySmall
+            )
 
             ClickableText(
                 text = AnnotatedString("Sign up here"),
@@ -60,7 +69,8 @@ fun LoginPage(
                 style = TextStyle(
                     fontSize = 16.sp,
                     fontFamily = FontFamily.Default,
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.primary,
+                    fontStyle = MaterialTheme.typography.bodySmall.fontStyle
                 )
             )
         }
@@ -71,7 +81,7 @@ fun LoginPage(
 
         Spacer(modifier = Modifier.height(20.dp))
         EmailField(
-            value = uiState.email,
+            value = uiState.email.trim(),
             onValueChanged = {
                 loginPageViewModel.onEmailChanged(it)
             }
@@ -79,7 +89,7 @@ fun LoginPage(
 
         Spacer(modifier = Modifier.height(20.dp))
         PasswordField(
-            value = uiState.password,
+            value = uiState.password.trim(),
             onValueChanged = { loginPageViewModel.onPasswordChanged(it) }
         )
 

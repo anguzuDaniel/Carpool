@@ -4,11 +4,9 @@ import android.app.Activity
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.ClickableText
@@ -47,13 +45,22 @@ fun SignupScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.Start
     ) {
-        Text(text = "Signup", style = TextStyle(fontSize = 40.sp, fontFamily = FontFamily.Cursive))
+        Text(
+            text = "Signup",
+            style = MaterialTheme.typography.titleLarge
+        )
 
-        Row(modifier = Modifier.padding(top = 16.dp)) {
-            Text(text = "Already have an account? ", style = TextStyle(fontSize = 16.sp, fontFamily = FontFamily.Default))
+        Row(
+            modifier = Modifier.padding(top = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Already have an account? ",
+                style = MaterialTheme.typography.bodySmall
+            )
 
             ClickableText(
-                text = AnnotatedString("Sign up here"),
+                text = AnnotatedString("Sign in here"),
                 modifier = Modifier,
                 onClick = {
                     onSignupClick()
@@ -61,7 +68,8 @@ fun SignupScreen(
                 style = TextStyle(
                     fontSize = 16.sp,
                     fontFamily = FontFamily.Default,
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.primary,
+                    fontStyle = MaterialTheme.typography.bodySmall.fontStyle
                 )
             )
         }
@@ -85,13 +93,13 @@ fun SignupScreen(
         }
 
         Spacer(modifier = Modifier.height(20.dp))
-        EmailField(value = uiState.email, onValueChanged = { signupViewModel.onEmailChanged(it) })
+        EmailField(value = uiState.email.trim(), onValueChanged = { signupViewModel.onEmailChanged(it) })
 
         Spacer(modifier = Modifier.height(20.dp))
-        PasswordField(value = uiState.password, onValueChanged = { signupViewModel.onPasswordChanged(it) })
+        PasswordField(value = uiState.password.trim(), onValueChanged = { signupViewModel.onPasswordChanged(it) })
 
         Spacer(modifier = Modifier.height(20.dp))
-        RepeatPasswordField(value = uiState.confirmPassword, onValueChanged = { signupViewModel.onConfirmPasswordChanged(it) })
+        RepeatPasswordField(value = uiState.confirmPassword.trim(), onValueChanged = { signupViewModel.onConfirmPasswordChanged(it) })
 
         Spacer(modifier = Modifier.height(20.dp))
         ButtonWithLoader(
