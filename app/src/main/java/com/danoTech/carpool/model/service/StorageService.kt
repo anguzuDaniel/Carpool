@@ -2,6 +2,7 @@ package com.danoTech.carpool.model.service
 
 import com.danoTech.carpool.model.Car
 import com.danoTech.carpool.model.Message
+import com.danoTech.carpool.model.Profile
 import kotlinx.coroutines.flow.Flow
 
 interface StorageService {
@@ -18,4 +19,5 @@ interface StorageService {
     suspend fun <User> requestRide(carpoolId: String, currentUser: Flow<User>)
     suspend fun getCarpool(carpoolId: String): Flow<Car?>
     suspend fun updateCarpool(updatedCarpool: Car)
+    suspend fun addProfile(profile: Profile)
 }

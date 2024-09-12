@@ -67,6 +67,7 @@ dependencies {
     implementation(libs.maps.compose)
     implementation(libs.play.services.maps)
     implementation(libs.places)
+
     // Also add the dependency for the Google Play services library and specify its version
     implementation(libs.play.services.auth)
     implementation(libs.com.google.firebase.firebase.analytics)
@@ -88,6 +89,7 @@ dependencies {
     implementation(libs.dagger)
     implementation(libs.hilt.android)
     implementation(libs.identity.jvm)
+    implementation(libs.androidx.media3.common)
     ksp(libs.dagger.compiler)
     ksp(libs.hilt.compiler)
     implementation(libs.com.google.devtools.ksp.gradle.plugin)
@@ -111,6 +113,8 @@ dependencies {
     // Add the dependency for the Cloud Storage library
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation(libs.firebase.storage.ktx)
+
+    implementation(libs.countrycodepickercompose)
 
     implementation(libs.androidx.lifecycle.viewmodel)
     implementation(libs.kotlinx.coroutines.core)

@@ -23,6 +23,8 @@ class RideOfferViewModel @Inject constructor(
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun offerRide() {
+        if (!validate()) return
+
         val car = Car(
             id = UUID.randomUUID().toString(),
             name = uiState.value.name,
@@ -57,6 +59,96 @@ class RideOfferViewModel @Inject constructor(
                 message = "Ride Offer saved."
             )
         }
+    }
+
+    private fun validate(): Boolean {
+
+        if (_uiState.value.name.isEmpty()) {
+            _uiState.value = _uiState.value.copy(
+                hasError = true,
+                message = "Number plate cannot be empty."
+            )
+            return false
+        }
+
+        if (_uiState.value.driverName.isEmpty()) {
+            _uiState.value = _uiState.value.copy(
+                hasError = true,
+                message = "Driver name cannot be empty."
+            )
+            return false
+        }
+
+        if (_uiState.value.pickupLocation.isEmpty()) {
+            _uiState.value = _uiState.value.copy(
+                hasError = true,
+                message = "Pickup location cannot be empty."
+            )
+            return false
+        }
+
+        if (_uiState.value.destination.isEmpty()) {
+            _uiState.value = _uiState.value.copy(
+                hasError = true,
+                message = "Destination cannot be empty."
+            )
+            return false
+        }
+
+        if (_uiState.value.departureTime.isEmpty()) {
+            _uiState.value = _uiState.value.copy(
+                hasError = true,
+                message = "Departure time cannot be empty."
+            )
+            return false
+        }
+
+        if (_uiState.value.price.isEmpty()) {
+            _uiState.value = _uiState.value.copy(
+                hasError = true,
+                message = "Price cannot be empty."
+            )
+            return false
+        }
+
+        if (_uiState.value.seatsAvailable == 0) {
+            _uiState.value = _uiState.value.copy(
+                hasError = true,
+                message = "Number of seats cannot be empty."
+            )
+            return false
+        }
+
+        if (_uiState.value.make.isEmpty()) {
+            _uiState.value = _uiState.value.copy(
+                hasError = true,
+                message = "Make cannot be empty."
+            )
+            return false
+        }
+
+        if (_uiState.value.model.isEmpty()) {
+            _uiState.value = _uiState.value.copy(
+                hasError = true,
+                message = "Model cannot be empty."
+            )
+            return false
+        }
+
+        if (_uiState.value.year.isEmpty()) {
+            _uiState.value = _uiState.value.copy(
+                hasError = true,
+                message = "Year cannot be empty."
+            )
+            return false
+        }
+
+        return _uiState.value.name.isNotEmpty() &&
+                _uiState.value.driverName.isNotEmpty() &&
+                _uiState.value.pickupLocation.isNotEmpty() &&
+                _uiState.value.destination.isNotEmpty() &&
+                _uiState.value.departureTime.isNotEmpty() &&
+                _uiState.value.price.isNotEmpty()
     }
 
     fun updateSelectedDate(date: String) {

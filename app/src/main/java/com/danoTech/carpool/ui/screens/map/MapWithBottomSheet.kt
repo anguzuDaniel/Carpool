@@ -94,7 +94,6 @@ fun MapScreenWithModalBottomSheet(
                         viewModel.onDestinationChanged(it.lowercase())
                     },
                     onSearchCarPool = {
-//                    viewModel.searchForCarpool()
                         onSearchPool(uiState.destination)
                     },
                     availableCars = rideRequestState.availableCars,
@@ -175,7 +174,6 @@ fun MapScreenWithBottomSheetScaffold(
                         viewModel.onDestinationChanged(it.lowercase())
                     },
                     onSearchCarPool = {
-//                    viewModel.searchForCarpool()
                         onSearchPool(uiState.destination)
                     },
                     availableCars = rideRequestState.availableCars,

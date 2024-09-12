@@ -37,4 +37,8 @@
     <string name="register_driver">Register Driver</string>
     <string name="chat_with_driver">Chat with Driver</string>
     <string name="repeat_password">Repeat password</string>
+    <string name="enter_otp_code">Enter otp Code</string>
+    <string name="phone_number">Phone number</string>
+    <string name="last_name">Last Name</string>
+    <string name="first_name">First Name</string>
 </resources>

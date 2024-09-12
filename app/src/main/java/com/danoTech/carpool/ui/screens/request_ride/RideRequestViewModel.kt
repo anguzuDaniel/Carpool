@@ -147,27 +147,41 @@ class RideRequestViewModel
         return currentCarpool?.isActive == true && currentCarpool.passengers.any { it == userId }
     }
 
-    fun joinCarpool(carpoolId: String, userId: String) {
+    fun joinCarpool(carpoolId: String, userId: String): Boolean {
+        var rideStarted = false
+
         viewModelScope.launch(Dispatchers.IO) {
             val carpool = storageService.getCarpool(carpoolId).first()
             carpool?.let {
                 if (it.seatsAvailable > 0) {
                     val updatedPassengers = it.passengers + userId
-                    val updatedCarpool = it.copy(passengers = updatedPassengers, seatsAvailable = it.seatsAvailable - 1)
+                    val updatedCarpool = it.copy(
+                        passengers = updatedPassengers,
+                        seatsAvailable = it.seatsAvailable - 1,
+                        isActive = true
+                    )
 
                     storageService.updateCarpool(updatedCarpool)
 
                     _rideUiState.value = _rideUiState.value.copy(
                         currentCarpool = updatedCarpool,
+                        isRideRequested = true,
                         carpoolMessage = "Joined the carpool successfully!"
                     )
+
+                    rideStarted = true
                 } else {
                     _rideUiState.value = _rideUiState.value.copy(
-                        carpoolMessage = "No seats available in this carpool."
+                        carpoolMessage = "No seats available in this carpool.",
+                        isRideRequested = false,
                     )
+
+                    rideStarted = false
                 }
             }
         }
+
+        return rideStarted
     }
 
     companion object {

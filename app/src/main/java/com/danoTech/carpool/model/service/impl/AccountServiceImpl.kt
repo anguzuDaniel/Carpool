@@ -1,11 +1,15 @@
 package com.danoTech.carpool.model.service.impl
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.compose.ui.util.trace
 import com.danoTech.carpool.model.User
 import com.danoTech.carpool.model.service.AccountService
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.PhoneAuthCredential
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -14,7 +18,8 @@ import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-class AccountServiceImpl @Inject constructor(private val auth: FirebaseAuth) : AccountService {
+class AccountServiceImpl @Inject
+constructor(private val auth: FirebaseAuth) : AccountService {
     override val currentUserId: String
         get() = auth.currentUser?.uid.orEmpty()
 
@@ -53,7 +58,6 @@ class AccountServiceImpl @Inject constructor(private val auth: FirebaseAuth) : A
             auth.currentUser!!.linkWithCredential(credential).await()
         }
 
-
     override suspend fun signInWithCredential(credential: AuthCredential): Boolean {
         return try {
             val authResult = FirebaseAuth.getInstance().signInWithCredential(credential).await()
@@ -80,15 +84,12 @@ class AccountServiceImpl @Inject constructor(private val auth: FirebaseAuth) : A
                     }
                 }
         }
-
     }
 
-    // Function to check if a user account exists by email
     override suspend fun checkUserExistsByEmail(email: String): Boolean {
         return suspendCoroutine { continuation ->
             val auth = FirebaseAuth.getInstance()
 
-            // Check if a user with the given email exists
             auth.fetchSignInMethodsForEmail(email)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
@@ -104,6 +105,28 @@ class AccountServiceImpl @Inject constructor(private val auth: FirebaseAuth) : A
         }
     }
 
+    override suspend fun createAccountWithNumberAndPassword(credential: PhoneAuthCredential) {
+        auth.signInWithCredential(credential).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d(TAG, "signInWithCredential:success")
+
+                    val user = task.result?.user
+                } else {
+                    // Sign in failed, display a message and update the UI
+                    Log.w(TAG, "signInWithCredential:failure", task.exception)
+                    if (task.exception is FirebaseAuthInvalidCredentialsException) {
+                        // The verification code entered was invalid
+                    }
+                    // Update UI
+                }
+            }
+    }
+
+    override suspend fun initiatePhoneNumberVerification(phoneNumber: String) {
+        auth.currentUser
+    }
+
     override suspend fun deleteAccount() {
         auth.currentUser!!.delete().await()
     }
@@ -114,5 +137,6 @@ class AccountServiceImpl @Inject constructor(private val auth: FirebaseAuth) : A
 
     companion object {
         private const val LINK_ACCOUNT_TRACE = "linkAccount"
+        private const val PROFILE = "profile"
     }
 }

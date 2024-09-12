@@ -1,8 +1,10 @@
 package com.danoTech.carpool.model.service
 
 import com.danoTech.carpool.model.Car
+import com.danoTech.carpool.model.Profile
 import com.danoTech.carpool.model.User
 import com.google.firebase.auth.AuthCredential
+import com.google.firebase.auth.PhoneAuthCredential
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -18,6 +20,8 @@ interface AccountService {
     suspend fun sendRecoveryEmail(email: String)
     suspend fun createAnonymousAccount()
     suspend fun createAccountWithEmailAndPassword(email: String, password: String)
+    suspend fun createAccountWithNumberAndPassword(credential: PhoneAuthCredential)
+    suspend fun initiatePhoneNumberVerification(phoneNumber: String)
     suspend fun checkUserExistsByEmail(email: String): Boolean
     suspend fun linkAccount(email: String, password: String)
     suspend fun changePassword(oobCode: String, newPassword: String): Boolean

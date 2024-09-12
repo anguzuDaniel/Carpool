@@ -40,6 +40,9 @@ package com.danoTech.carpool.ui.screens.map
   import androidx.hilt.navigation.compose.hiltViewModel
   import com.danoTech.carpool.ui.screens.request_ride.RideRequestViewModel
   import com.google.android.gms.location.LocationServices
+  import com.google.firebase.Firebase
+  import com.google.firebase.auth.FirebaseAuth
+  import com.google.firebase.auth.auth
   import java.util.Locale
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -111,7 +114,7 @@ fun MapScreenWithSearch(
                     onNavItemClicked(it)
                 },
                 onSearchPool = onSearchPool,
-                isInCarpool = uiState.isCarpoolStarted
+                isInCarpool = viewModel.isUserInActiveCarpool(Firebase.auth.currentUser!!.uid)
             )
         } else {
             MapScreenWithBottomSheetScaffold(
@@ -124,7 +127,7 @@ fun MapScreenWithSearch(
                     onNavItemClicked(it)
                 },
                 onSearchPool = onSearchPool,
-                isInCarpool = uiState.isCarpoolStarted
+                isInCarpool = viewModel.isUserInActiveCarpool(Firebase.auth.currentUser!!.uid)
             )
         }
 

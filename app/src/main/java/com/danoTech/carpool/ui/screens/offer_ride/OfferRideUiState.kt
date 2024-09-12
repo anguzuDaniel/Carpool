@@ -15,7 +15,7 @@ data class OfferedRideUiState(
     val pickupLocation: String = "",
     val destination: String = "",
     var seatsAvailable: Int = 0,
-    val departureTime: String = "",
+    var departureTime: String = "",
     val price: String = "",
     val make: String = "",
     val message: String = "",

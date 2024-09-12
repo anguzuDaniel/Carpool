@@ -156,6 +156,9 @@ fun NavigateToScreen(
                 },
                 onChatClick = {
                     navController.navigate("${Routes.Chat.route}/${it}")
+                },
+                onRequestPoolClick = {
+                    navController.navigate("${Routes.RequestRide.route}")
                 }
             )
         }

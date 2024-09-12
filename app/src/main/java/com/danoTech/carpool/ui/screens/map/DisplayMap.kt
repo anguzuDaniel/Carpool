@@ -48,10 +48,30 @@ fun MapDisplay(
     var showCarAvailability by remember { mutableStateOf(false) }
     var areCarsAvailable by remember { mutableStateOf(false) }
 
+    var userLocation by remember { mutableStateOf<LatLng?>(null) }
+
+    var driverLocation by remember { mutableStateOf<LatLng?>(null) }
+
     GoogleMap(
         modifier = modifier,
         cameraPositionState = cameraPositionState,
     ) {
+        // Markers for search results
+        userLocation?.let {
+            Marker(
+                state = MarkerState(position = it),
+                title = "Your Location"
+            )
+        }
+
+        driverLocation?.let {
+            Marker(
+                state = MarkerState(position = it),
+                title = "Driver Location",
+                snippet = ""
+            )
+        }
+
         // Default marker
         Marker(
             state = MarkerState(position = defaultLocation), title = country,

@@ -2,8 +2,10 @@
 accompanistSystemuicontroller = "0.35.1-alpha"
 agp = "8.5.1"
 androidGradle = "8.1.4"
+cmpCountryCodePicker = "1.0.1"
 coilCompose = "2.7.0"
 comGoogleDevtoolsKspGradlePlugin = "2.0.0-1.0.23"
+countrycodepickercompose = "0.1"
 daggerCompiler = "2.51.1"
 daggerCompilerVersion = "2.51.1"
 firebaseAnalytics = "22.0.2"
@@ -50,6 +52,7 @@ roomCompilerProcessingTesting = "2.6.0"
 secretsGradlePlugin = "2.0.1"
 workRuntimeKtx = "2.9.1"
 identityJvm = "202408.1"
+media3Common = "1.4.1"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistSystemuicontroller" }
@@ -70,9 +73,11 @@ androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref =
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomCompiler" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
+cmp-country-code-picker = { module = "network.chaintech:cmp-country-code-picker", version.ref = "cmpCountryCodePicker" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 com-google-devtools-ksp-gradle-plugin = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "comGoogleDevtoolsKspGradlePlugin" }
 com-google-firebase-firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+countrycodepickercompose = { module = "com.github.ahmmedrejowan:CountryCodePickerCompose", version.ref = "countrycodepickercompose" }
 dagger = { module = "com.google.dagger:dagger", version.ref = "daggerCompiler" }
 dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "daggerCompiler" }
 dagger-compiler-v248 = { module = "com.google.dagger:dagger-compiler", version.ref = "daggerCompilerVersion" }
@@ -126,6 +131,7 @@ play-services-maps = { module = "com.google.android.gms:play-services-maps", ver
 androidx-room-compiler-processing-testing = { group = "androidx.room", name = "room-compiler-processing-testing", version.ref = "roomCompilerProcessingTesting" }
 secrets-gradle-plugin = { module = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin", version.ref = "secretsGradlePlugin" }
 identity-jvm = { group = "com.android.identity", name = "identity-jvm", version.ref = "identityJvm" }
+androidx-media3-common = { group = "androidx.media3", name = "media3-common", version.ref = "media3Common" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

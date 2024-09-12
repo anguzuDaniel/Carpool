@@ -5,6 +5,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,9 +19,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Call
+import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.filled.CarRental
+import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.LocationSearching
 import androidx.compose.material3.Button
@@ -36,16 +39,20 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.danoTech.carpool.R
 import com.danoTech.carpool.model.Car
 import com.danoTech.carpool.ui.screens.components.LoadingPage
 import com.danoTech.carpool.ui.screens.request_ride.RideRequestViewModel
+import com.danoTech.carpool.ui.theme.CarpoolTheme
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import java.util.Locale
@@ -64,6 +71,38 @@ fun DisplayCarPoolList(
     LaunchedEffect(viewModel) {
         viewModel.searchForCarpool(destination)
         Log.d("AvailableCars", uiState.availableCars.toString())
+    }
+
+    if (uiState.carpoolMessage.isNotEmpty()) {
+        Dialog(
+            onDismissRequest = { }
+        ) {
+            Column(
+                modifier = Modifier
+                    .background(MaterialTheme.colorScheme.background)
+                    .padding(16.dp)
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(10.dp)),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.ErrorOutline,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(32.dp)
+                        .padding(top = 8.dp)
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = uiState.carpoolMessage,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    fontSize = 16.sp,
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+        }
     }
 
     if (uiState.isSearchingForRide) {
@@ -90,7 +129,8 @@ fun DisplayCarPoolList(
                         car = car,
                         onChatClick = onChatClick,
                         onRequestPoolClick = {
-                            viewModel.joinCarpool(it, Firebase.auth.currentUser!!.uid)
+                            val rideStarted = viewModel.joinCarpool(it, Firebase.auth.currentUser!!.uid)
+                            if (rideStarted) onRequestPoolClick(it)
                         }
                     )
                 }
@@ -119,8 +159,15 @@ fun CarCardItemDisplay(
                 Box(
                     modifier = Modifier
                         .size(80.dp)
-                        .background(MaterialTheme.colorScheme.surfaceVariant, shape = MaterialTheme.shapes.small)
-                        .border(1.dp, MaterialTheme.colorScheme.primary, shape = MaterialTheme.shapes.small)
+                        .background(
+                            MaterialTheme.colorScheme.surfaceVariant,
+                            shape = MaterialTheme.shapes.small
+                        )
+                        .border(
+                            1.dp,
+                            if (isSystemInDarkTheme()) Color.White else MaterialTheme.colorScheme.primary,
+                            shape = MaterialTheme.shapes.small
+                        )
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.adobe_stock_1),
@@ -146,7 +193,7 @@ fun CarCardItemDisplay(
                     ) {
                         Text(
                             text = car.driverName,
-                            color = MaterialTheme.colorScheme.primary,
+                            color = if (isSystemInDarkTheme()) Color.White else MaterialTheme.colorScheme.secondary,
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
@@ -154,14 +201,14 @@ fun CarCardItemDisplay(
                         Text(
                             text = "${car.price} Ugx",
                             style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.secondary,
+                            color = if (isSystemInDarkTheme()) Color.White else MaterialTheme.colorScheme.secondary,
                             fontWeight = FontWeight.SemiBold
                         )
                     }
 
                     HorizontalDivider(
                         modifier = Modifier.padding(vertical = 8.dp),
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
+                        color = if (isSystemInDarkTheme()) Color.White else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
                     )
 
                     Row(
@@ -218,13 +265,13 @@ fun CarCardItemDisplay(
                     shape = MaterialTheme.shapes.medium
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Call,
+                        imageVector = Icons.AutoMirrored.Filled.Chat,
                         contentDescription = null,
                         modifier = Modifier.size(20.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "Chat with Driver",
+                        text = "with Driver",
                         color = MaterialTheme.colorScheme.onPrimary,
                         fontSize = 12.sp,
                         style = MaterialTheme.typography.bodyMedium
@@ -252,7 +299,7 @@ fun CarCardItemDisplay(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "Request for Pool",
+                        text = "Request Pool",
                         fontSize = 12.sp,
                         style = MaterialTheme.typography.bodyMedium
                     )
@@ -262,20 +309,23 @@ fun CarCardItemDisplay(
     }
 }
 
-
 @Preview(showBackground = true)
 @Composable
 fun CarCardDisplayPreview() {
-    CarCardItemDisplay(
-        car = Car(
-            id = "1",
-            userId = "",
-            driverName = "Anguzu Daniel",
-            name = "Car 1",
-            destination = "Destination",
-            price = "10000",
-            seatsAvailable = 1,
-            pickupLocation = "Pickup Location 1"
+    CarpoolTheme(
+        darkTheme = true
+    ) {
+        CarCardItemDisplay(
+            car = Car(
+                id = "1",
+                userId = "",
+                driverName = "Anguzu Daniel",
+                name = "Car 1",
+                destination = "Destination",
+                price = "10000",
+                seatsAvailable = 1,
+                pickupLocation = "Pickup Location 1"
+            )
         )
-    )
+    }
 }

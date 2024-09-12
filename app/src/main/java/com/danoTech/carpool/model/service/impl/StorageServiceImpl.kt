@@ -3,6 +3,7 @@ package com.danoTech.carpool.model.service.impl
 import androidx.compose.ui.util.trace
 import com.danoTech.carpool.model.Car
 import com.danoTech.carpool.model.Message
+import com.danoTech.carpool.model.Profile
 import com.danoTech.carpool.model.service.AccountService
 import com.danoTech.carpool.model.service.Driver
 import com.danoTech.carpool.model.service.StorageService
@@ -127,6 +128,10 @@ constructor(private val firestore: FirebaseFirestore, private val auth: AccountS
             .await()
     }
 
+    override suspend fun addProfile(profile: Profile) {
+        firestore.collection(PROFILE).add(profile).await()
+    }
+
     companion object {
         private const val USER_ID_FIELD = "userId"
         private const val DESTINATION_FIELD = "destination"
@@ -137,6 +142,7 @@ constructor(private val firestore: FirebaseFirestore, private val auth: AccountS
         private const val CAR_COLLECTION = "cars"
         private const val CONVERSATION_ID_FEIlD = "conversationId"
         private const val DRIVER_ID_FIELD = "driverId"
+        private const val PROFILE = "profile"
         private const val SENDER_ID_FIELD = "senderId"
         private const val RECEIVER_ID_FIELD = "receiverId"
         private const val DRIVER_COLLECTION = "drivers"

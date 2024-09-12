@@ -7,11 +7,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -19,8 +19,14 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -28,6 +34,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.danoTech.carpool.R
+import com.rejowan.ccpc.CCPUtils
+import com.rejowan.ccpc.Country
+import com.rejowan.ccpc.CountryCodePickerTextField
 
 @Composable
 fun TextInput(
@@ -135,6 +144,7 @@ fun TextInputWithLabel(
         modifier = modifier
             .fillMaxWidth()
             .clickable(onClick = { onSearchInputClicked() }),
+        shape = RoundedCornerShape(10.dp),
         singleLine = true
     )
     Spacer(modifier = modifier.height(5.dp))
@@ -178,7 +188,7 @@ fun EmailField(
     OutlinedTextField(
         singleLine = true,
         modifier = modifier.fillMaxWidth(),
-        value = value,
+        value = value.trim(),
         onValueChange = { onValueChanged(it) },
         placeholder = {
             Text(
@@ -192,7 +202,105 @@ fun EmailField(
                 contentDescription = "Email",
                 tint = MaterialTheme.colorScheme.onSurface
             )
+        },
+        shape = RoundedCornerShape(10.dp)
+    )
+    Spacer(modifier = modifier.height(5.dp))
+}
+
+@Composable
+fun TextFieldWithLabel(
+    icon: ImageVector,
+    labelText: String,
+    value: String,
+    onValueChanged: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    OutlinedTextField(
+        singleLine = true,
+        modifier = modifier.fillMaxWidth(),
+        value = value.trim(),
+        onValueChange = { onValueChanged(it) },
+        placeholder = {
+            Text(
+                text = labelText,
+                style = MaterialTheme.typography.titleMedium
+            )
+        },
+        leadingIcon = {
+            Icon(
+                imageVector = icon,
+                contentDescription = "",
+                tint = MaterialTheme.colorScheme.onSurface
+            )
+        },
+        shape = RoundedCornerShape(10.dp)
+    )
+    Spacer(modifier = modifier.height(5.dp))
+}
+
+@Composable
+fun TextFieldPhoneNumber(
+    value: String,
+    onValueChanged: (String) -> Unit,
+    onCountryCodeChanged: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    var country by remember {
+        mutableStateOf(Country.Uganda)
+    }
+
+    if (!LocalInspectionMode.current) {
+        CCPUtils.getCountryAutomatically(context = LocalContext.current).let {
+            it?.let {
+                country = it
+            }
         }
+    }
+
+    CountryCodePickerTextField(
+        modifier = modifier
+            .fillMaxWidth(),
+        enabled = true,
+        textStyle = MaterialTheme.typography.bodyMedium,
+        label = {
+            Text(
+                text = "Phone Number", style = MaterialTheme.typography.bodyMedium
+            )
+        },
+        showError = true,
+        shape = RoundedCornerShape(10.dp),
+        onValueChange = { countryCode, value, _ ->
+            onCountryCodeChanged(countryCode)
+            onValueChanged(value)
+        },
+        number = value,
+        selectedCountry = country
+    )
+
+    Spacer(modifier = modifier.height(5.dp))
+}
+
+@Composable
+fun OtpCodeInput(
+    value: String,
+    onValueChanged: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    OutlinedTextField(
+        singleLine = true,
+        modifier = modifier.fillMaxWidth(),
+        value = value.trim(),
+        onValueChange = { onValueChanged(it) },
+        placeholder = {
+            Text(
+                text = stringResource(R.string.enter_otp_code),
+                style = MaterialTheme.typography.titleMedium
+            )
+        },
+        keyboardOptions = KeyboardOptions.Default.copy(
+            keyboardType = KeyboardType.Number
+        )
     )
     Spacer(modifier = modifier.height(5.dp))
 }

@@ -47,7 +47,7 @@ val AppTypography = Typography(
     ),
     titleSmall = TextStyle(
         fontFamily = roboto,
-        fontWeight = FontWeight.Bold,
+        fontWeight = FontWeight.Normal,
         fontSize = 14.sp,
         lineHeight = 20.sp,
         letterSpacing = 0.5.sp
@@ -68,7 +68,7 @@ val AppTypography = Typography(
     ),
     labelSmall = TextStyle(
         fontFamily = openSans,
-        fontWeight = FontWeight.Bold,
+        fontWeight = FontWeight.Normal,
         fontSize = 11.sp,
         lineHeight = 16.sp,
         letterSpacing = 0.5.sp

@@ -1,6 +1,7 @@
 package com.danoTech.carpool.ui.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.absolutePadding
@@ -22,9 +23,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.danoTech.carpool.R
+import com.danoTech.carpool.ui.theme.CarpoolTheme
 
 @Composable
 fun IntroScreen(
@@ -94,10 +97,28 @@ fun IntroScreen(
                 ) {
                     Text(
                         text = stringResource(R.string.no_account_yet_msg),
-                        color = MaterialTheme.colorScheme.primary
+                        color = if (isSystemInDarkTheme())  Color.White else MaterialTheme.colorScheme.primary
                     )
                 }
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun IntroScreenPreviewLight() {
+    CarpoolTheme {
+        IntroScreen()
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun IntroScreenPreviewDark() {
+    CarpoolTheme(
+        darkTheme = true
+    ) {
+        IntroScreen()
     }
 }
