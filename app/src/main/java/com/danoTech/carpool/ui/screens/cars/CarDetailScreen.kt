@@ -64,6 +64,7 @@ fun CarDetailsScreen(
                     style = MaterialTheme.typography.headlineMedium,
                     color = MaterialTheme.colorScheme.primary
                 )
+
                 Spacer(modifier = Modifier.height(16.dp))
                 Box(
                     modifier = Modifier
@@ -101,6 +102,7 @@ fun CarDetailsScreen(
                         )
                     }
                 }
+
                 Spacer(modifier = Modifier.height(16.dp))
                 Row {
                     Icon(
@@ -120,6 +122,7 @@ fun CarDetailsScreen(
                         style = MaterialTheme.typography.bodyLarge
                     )
                 }
+
                 Spacer(modifier = Modifier.height(8.dp))
                 Row {
                     Icon(
@@ -139,6 +142,7 @@ fun CarDetailsScreen(
                         style = MaterialTheme.typography.bodyLarge
                     )
                 }
+
                 Spacer(modifier = Modifier.height(8.dp))
                 Row {
                     Icon(
@@ -158,6 +162,7 @@ fun CarDetailsScreen(
                         style = MaterialTheme.typography.bodyLarge
                     )
                 }
+
                 Spacer(modifier = Modifier.height(8.dp))
                 Row {
                     Icon(

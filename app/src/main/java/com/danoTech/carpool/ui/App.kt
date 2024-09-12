@@ -27,6 +27,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.danoTech.carpool.BottomNavScreen
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -78,7 +79,14 @@ fun App(){
                         },
                         label = { Text(text = "Logout") },
                         selected = false,
-                        onClick = { }
+                        onClick = {
+                            FirebaseAuth.getInstance().signOut()
+                            navController.navigate(Routes.Login.route)
+
+                            scope.launch {
+                                drawerState.close()
+                            }
+                        }
                     )
                 }
             },

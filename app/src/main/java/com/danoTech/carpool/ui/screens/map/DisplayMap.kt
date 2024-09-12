@@ -1,11 +1,13 @@
 package com.danoTech.carpool.ui.screens.map
 
+import android.content.Context
 import android.location.Geocoder
 import android.location.Location
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -21,6 +23,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberCameraPositionState
 import java.util.Locale
 
@@ -33,7 +36,7 @@ fun MapDisplay(
     viewModel: RideRequestViewModel,
 ) {
     val context = LocalContext.current
-    val uiState = viewModel.uiState.collectAsState().value
+    val uiState = viewModel.rideRequestUiState.collectAsState().value
     val gc = Geocoder(context, Locale.getDefault())
 
     // Location of Kampala, Uganda (default)
@@ -52,25 +55,43 @@ fun MapDisplay(
 
     var driverLocation by remember { mutableStateOf<LatLng?>(null) }
 
+    // State for start and end locations
+    var startLocation by remember { mutableStateOf<LatLng>(LatLng(0.0, 0.0)) }
+    var endLocation by remember { mutableStateOf<LatLng>(LatLng(0.0, 0.0)) }
+
+    // Update start and end markers based on carpool data
+    uiState.currentCarpool?.let { carpool ->
+        startLocation = (getLatLngFromLocationName(LocalContext.current , carpool.pickupLocation) ?: LatLng(0.0, 0.0)) as LatLng
+        endLocation =
+            (getLatLngFromLocationName(LocalContext.current, carpool.destination) ?: LatLng(0.0, 0.0)) as LatLng
+    }
+
     GoogleMap(
         modifier = modifier,
         cameraPositionState = cameraPositionState,
     ) {
-        // Markers for search results
-        userLocation?.let {
+        // Start location marker
+        startLocation?.let {
             Marker(
                 state = MarkerState(position = it),
-                title = "Your Location"
+                title = "Start Location"
             )
         }
 
-        driverLocation?.let {
+        // End location marker
+        endLocation?.let {
             Marker(
                 state = MarkerState(position = it),
-                title = "Driver Location",
-                snippet = ""
+                title = "End Location"
             )
         }
+
+        Polyline(
+            points = listOf(startLocation, endLocation),
+            clickable = true,
+            color = MaterialTheme.colorScheme.primary,
+            width = 5f
+        )
 
         // Default marker
         Marker(
@@ -124,4 +145,18 @@ fun MapDisplay(
             }
         )
     }
+}
+
+fun getLatLngFromLocationName(context: Context, locationName: String): Unit? {
+    val geocoder = Geocoder(context, Locale.getDefault())
+    val addressList = geocoder.getFromLocationName(locationName, 1)
+
+        val address = addressList?.get(0)
+        val latitude = address?.latitude
+        val longitude = address?.longitude
+        return latitude?.let {
+            if (longitude != null) {
+                LatLng(it, longitude)
+            }
+        }
 }

@@ -23,6 +23,7 @@ class StorageServiceImpl
 @Inject
 constructor(private val firestore: FirebaseFirestore, private val auth: AccountService) :
     StorageService {
+    private val carQuery = firestore.collection(CAR_COLLECTION)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override val reviews: Flow<List<Car>>
@@ -87,10 +88,7 @@ constructor(private val firestore: FirebaseFirestore, private val auth: AccountS
     }
 
     override suspend fun getCars(): List<Car> {
-        val query = firestore.collection(CAR_COLLECTION)
-        val snapshot = query.get().await()
-        val cars = snapshot.toObjects(Car::class.java)
-        return cars
+        return listenForCarUpdates()
     }
 
     override suspend fun registerDriver(
@@ -130,6 +128,22 @@ constructor(private val firestore: FirebaseFirestore, private val auth: AccountS
 
     override suspend fun addProfile(profile: Profile) {
         firestore.collection(PROFILE).add(profile).await()
+    }
+
+    private fun listenForCarUpdates(): List<Car> {
+        var cars = emptyList<Car>()
+
+        carQuery.addSnapshotListener { snapshot, error ->
+            if (error != null) {
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null) {
+                cars = snapshot.toObjects(Car::class.java)
+            }
+        }
+
+        return cars
     }
 
     companion object {

@@ -97,7 +97,7 @@ fun MapScreenWithModalBottomSheet(
                         onSearchPool(uiState.destination)
                     },
                     availableCars = rideRequestState.availableCars,
-                    isInCarpool = isInCarpool,
+                    isInCarpool = rideRequestState.isCarpoolStarted,
                     onCancelCarpool = {
                         showConfirmationDialog = true
                     }

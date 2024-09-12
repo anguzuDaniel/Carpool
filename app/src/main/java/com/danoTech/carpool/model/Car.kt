@@ -17,6 +17,6 @@ data class Car(
     val seatsAvailable: Int = 0,
     val departureTime: String = "",
     val price: String = "",
-    val isActive: Boolean = false,
+    val active: Boolean = false,
     val passengers: List<Any> = emptyList()
 )

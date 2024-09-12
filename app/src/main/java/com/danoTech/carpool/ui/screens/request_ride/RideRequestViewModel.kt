@@ -63,6 +63,10 @@ class RideRequestViewModel
         }
     }
 
+    fun onCarPoolMessageChanged(newValue: String) {
+        _rideUiState.value = _rideUiState.value.copy(carpoolMessage = newValue)
+    }
+
     fun onQueryChanged(newValue: String) {
         _uiState.value = _uiState.value.copy(query = newValue)
     }
@@ -143,8 +147,51 @@ class RideRequestViewModel
     }
 
     fun isUserInActiveCarpool(userId: String): Boolean {
-        val currentCarpool = _rideUiState.value.currentCarpool
-        return currentCarpool?.isActive == true && currentCarpool.passengers.any { it == userId }
+        var isInActiveCarpool = false
+
+        viewModelScope.launch(Dispatchers.Default) {
+            try {
+                val cars = storageService.getCars()
+
+                val activeCarpools = cars.filter {
+                    it.active
+                }
+
+                val userCarpool = activeCarpools.find { it.passengers.contains(userId) }
+
+                if (userCarpool != null) {
+                    isInActiveCarpool = true
+
+                    _rideUiState.value = _rideUiState.value.copy(
+                        currentCarpool = userCarpool,
+                        destination = userCarpool.destination,
+                        pickupLocation = userCarpool.pickupLocation,
+                        price = userCarpool.price,
+                        isCarpoolStarted = true
+                    )
+                }
+            } catch (e: Exception) {
+                _rideUiState.value = _rideUiState.value.copy(
+                    carpoolMessage = "Error checking carpool status: ${e.message}",
+                    isRideRequested = false
+                )
+            } finally {
+                if (isInActiveCarpool) {
+                    _rideUiState.value = _rideUiState.value.copy(
+                        carpoolMessage = "You are currently in an active carpool.",
+                        isRideRequested = false
+                    )
+                } else {
+                    // User is not in an active carpool
+                    _rideUiState.value = _rideUiState.value.copy(
+                        carpoolMessage = "You are not currently in an active carpool.",
+                        isRideRequested = false
+                    )
+                }
+            }
+        }
+
+        return isInActiveCarpool
     }
 
     fun joinCarpool(carpoolId: String, userId: String): Boolean {
@@ -153,12 +200,12 @@ class RideRequestViewModel
         viewModelScope.launch(Dispatchers.IO) {
             val carpool = storageService.getCarpool(carpoolId).first()
             carpool?.let {
-                if (it.seatsAvailable > 0) {
+                if (it.seatsAvailable > 0 && !it.passengers.contains(userId)) {
                     val updatedPassengers = it.passengers + userId
                     val updatedCarpool = it.copy(
                         passengers = updatedPassengers,
                         seatsAvailable = it.seatsAvailable - 1,
-                        isActive = true
+                        active = true
                     )
 
                     storageService.updateCarpool(updatedCarpool)
@@ -171,10 +218,17 @@ class RideRequestViewModel
 
                     rideStarted = true
                 } else {
-                    _rideUiState.value = _rideUiState.value.copy(
-                        carpoolMessage = "No seats available in this carpool.",
-                        isRideRequested = false,
-                    )
+                    if (it.passengers.contains(userId)) {
+                        _rideUiState.value = _rideUiState.value.copy(
+                            carpoolMessage = "You are already in the carpool.",
+                            isRideRequested = false
+                        )
+                    } else {
+                        _rideUiState.value = _rideUiState.value.copy(
+                            carpoolMessage = "No seats available in this carpool.",
+                            isRideRequested = false,
+                        )
+                    }
 
                     rideStarted = false
                 }

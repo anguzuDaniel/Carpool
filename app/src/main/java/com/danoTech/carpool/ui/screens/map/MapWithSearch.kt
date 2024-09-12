@@ -98,6 +98,10 @@ fun MapScreenWithSearch(
         }
     }
 
+    LaunchedEffect(viewModel) {
+        viewModel.isUserInActiveCarpool(FirebaseAuth.getInstance().currentUser!!.email.toString())
+    }
+
     BackHandler {
         onBack()
     }
@@ -114,7 +118,7 @@ fun MapScreenWithSearch(
                     onNavItemClicked(it)
                 },
                 onSearchPool = onSearchPool,
-                isInCarpool = viewModel.isUserInActiveCarpool(Firebase.auth.currentUser!!.uid)
+                isInCarpool = uiState.isCarpoolStarted
             )
         } else {
             MapScreenWithBottomSheetScaffold(
@@ -127,7 +131,7 @@ fun MapScreenWithSearch(
                     onNavItemClicked(it)
                 },
                 onSearchPool = onSearchPool,
-                isInCarpool = viewModel.isUserInActiveCarpool(Firebase.auth.currentUser!!.uid)
+                isInCarpool = uiState.isCarpoolStarted
             )
         }
 

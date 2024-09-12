@@ -54,6 +54,7 @@ import com.danoTech.carpool.ui.screens.components.LoadingPage
 import com.danoTech.carpool.ui.screens.request_ride.RideRequestViewModel
 import com.danoTech.carpool.ui.theme.CarpoolTheme
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import java.util.Locale
 
@@ -70,12 +71,13 @@ fun DisplayCarPoolList(
 
     LaunchedEffect(viewModel) {
         viewModel.searchForCarpool(destination)
-        Log.d("AvailableCars", uiState.availableCars.toString())
     }
 
     if (uiState.carpoolMessage.isNotEmpty()) {
         Dialog(
-            onDismissRequest = { }
+            onDismissRequest = {
+                viewModel.onCarPoolMessageChanged("")
+            }
         ) {
             Column(
                 modifier = Modifier
@@ -129,8 +131,8 @@ fun DisplayCarPoolList(
                         car = car,
                         onChatClick = onChatClick,
                         onRequestPoolClick = {
-                            val rideStarted = viewModel.joinCarpool(it, Firebase.auth.currentUser!!.uid)
-                            if (rideStarted) onRequestPoolClick(it)
+                            viewModel.joinCarpool(it, FirebaseAuth.getInstance().currentUser!!.email.toString())
+                            onRequestPoolClick(it)
                         }
                     )
                 }

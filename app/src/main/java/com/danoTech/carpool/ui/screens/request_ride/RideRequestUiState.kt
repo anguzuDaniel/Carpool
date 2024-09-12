@@ -15,7 +15,7 @@ data class RideRequestUiState(
     var isErrorSearch: Boolean = false,
     val isCarpoolStarted: Boolean = false,
     val isRideRequested: Boolean = false,
-    val carpoolMessage: String = "",
+    var carpoolMessage: String = "",
     val rideRequestMessage: String = "",
     val currentCarpool: Car? = null,
     val passengers: List<String> = emptyList()
