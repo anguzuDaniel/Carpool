@@ -87,8 +87,11 @@ constructor(private val firestore: FirebaseFirestore, private val auth: AccountS
         firestore.collection(MESSAGE_COLLECTION).add(chatMessage).await()
     }
 
-    override suspend fun getCars(): List<Car> {
-        return listenForCarUpdates()
+    override suspend fun getCars(): Flow<List<Car>> {
+        return carQuery.snapshots()
+            .map { snapshot ->
+                snapshot.toObjects(Car::class.java)
+            }
     }
 
     override suspend fun registerDriver(
@@ -130,20 +133,17 @@ constructor(private val firestore: FirebaseFirestore, private val auth: AccountS
         firestore.collection(PROFILE).add(profile).await()
     }
 
-    private fun listenForCarUpdates(): List<Car> {
-        var cars = emptyList<Car>()
-
+    private fun listenForCarUpdates(onCarsUpdated: (List<Car>) -> Unit) {
         carQuery.addSnapshotListener { snapshot, error ->
             if (error != null) {
                 return@addSnapshotListener
             }
 
             if (snapshot != null) {
-                cars = snapshot.toObjects(Car::class.java)
+                val cars = snapshot.toObjects(Car::class.java)
+                onCarsUpdated(cars) // Call the callback with the updated car list
             }
         }
-
-        return cars
     }
 
     companion object {

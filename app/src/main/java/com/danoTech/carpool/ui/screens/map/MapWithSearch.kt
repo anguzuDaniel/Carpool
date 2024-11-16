@@ -9,6 +9,7 @@ package com.danoTech.carpool.ui.screens.map
   import android.location.Geocoder
   import android.location.Location
   import android.os.Build
+  import android.util.Log
   import androidx.activity.compose.BackHandler
   import androidx.activity.compose.rememberLauncherForActivityResult
   import androidx.activity.result.contract.ActivityResultContracts
@@ -40,9 +41,7 @@ package com.danoTech.carpool.ui.screens.map
   import androidx.hilt.navigation.compose.hiltViewModel
   import com.danoTech.carpool.ui.screens.request_ride.RideRequestViewModel
   import com.google.android.gms.location.LocationServices
-  import com.google.firebase.Firebase
   import com.google.firebase.auth.FirebaseAuth
-  import com.google.firebase.auth.auth
   import java.util.Locale
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -99,7 +98,10 @@ fun MapScreenWithSearch(
     }
 
     LaunchedEffect(viewModel) {
-        viewModel.isUserInActiveCarpool(FirebaseAuth.getInstance().currentUser!!.email.toString())
+        viewModel.checkUserInActiveCarpool(FirebaseAuth.getInstance().currentUser!!.email!!)
+
+        Log.d("User", "Email: ${FirebaseAuth.getInstance().currentUser!!.email}")
+        Log.d("Is Ride Requested", "RideRequestUiState: ${uiState.isRideRequested}")
     }
 
     BackHandler {
@@ -118,7 +120,7 @@ fun MapScreenWithSearch(
                     onNavItemClicked(it)
                 },
                 onSearchPool = onSearchPool,
-                isInCarpool = uiState.isCarpoolStarted
+                isCarPool = uiState.isRideRequested
             )
         } else {
             MapScreenWithBottomSheetScaffold(
@@ -131,7 +133,7 @@ fun MapScreenWithSearch(
                     onNavItemClicked(it)
                 },
                 onSearchPool = onSearchPool,
-                isInCarpool = uiState.isCarpoolStarted
+                isCarPool = uiState.isRideRequested
             )
         }
 

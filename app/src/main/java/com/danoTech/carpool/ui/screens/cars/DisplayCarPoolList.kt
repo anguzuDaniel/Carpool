@@ -1,6 +1,5 @@
 package com.danoTech.carpool.ui.screens.cars
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -53,9 +52,7 @@ import com.danoTech.carpool.model.Car
 import com.danoTech.carpool.ui.screens.components.LoadingPage
 import com.danoTech.carpool.ui.screens.request_ride.RideRequestViewModel
 import com.danoTech.carpool.ui.theme.CarpoolTheme
-import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.auth
 import java.util.Locale
 
 @Composable

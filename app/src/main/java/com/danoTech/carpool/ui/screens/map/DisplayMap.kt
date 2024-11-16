@@ -4,27 +4,36 @@ import android.content.Context
 import android.location.Geocoder
 import android.location.Location
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.danoTech.carpool.ui.screens.request_ride.RideRequestViewModel
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberCameraPositionState
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.io.IOException
 import java.util.Locale
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -33,7 +42,7 @@ fun MapDisplay(
     country: String,
     currentLocation: Location,
     modifier: Modifier = Modifier,
-    viewModel: RideRequestViewModel,
+    viewModel: RideRequestViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
     val uiState = viewModel.rideRequestUiState.collectAsState().value
@@ -46,52 +55,61 @@ fun MapDisplay(
         position = CameraPosition.fromLatLngZoom(defaultLocation, 10f)
     }
 
-    var searchResults by remember { mutableStateOf<List<LatLng>>(emptyList()) }
+    val searchResults by remember { mutableStateOf<List<LatLng>>(emptyList()) }
     var selectedLocation by remember { mutableStateOf<LatLng?>(null) }
     var showCarAvailability by remember { mutableStateOf(false) }
-    var areCarsAvailable by remember { mutableStateOf(false) }
-
-    var userLocation by remember { mutableStateOf<LatLng?>(null) }
-
-    var driverLocation by remember { mutableStateOf<LatLng?>(null) }
+    val areCarsAvailable by remember { mutableStateOf(false) }
 
     // State for start and end locations
-    var startLocation by remember { mutableStateOf<LatLng>(LatLng(0.0, 0.0)) }
-    var endLocation by remember { mutableStateOf<LatLng>(LatLng(0.0, 0.0)) }
+    var startLocation by remember { mutableStateOf(LatLng(0.0, 0.0)) }
+    var endLocation by remember { mutableStateOf(LatLng(0.0, 0.0)) }
 
-    // Update start and end markers based on carpool data
-    uiState.currentCarpool?.let { carpool ->
-        startLocation = (getLatLngFromLocationName(LocalContext.current , carpool.pickupLocation) ?: LatLng(0.0, 0.0)) as LatLng
-        endLocation =
-            (getLatLngFromLocationName(LocalContext.current, carpool.destination) ?: LatLng(0.0, 0.0)) as LatLng
+    LaunchedEffect(uiState.currentCarpool) {
+        // Update start and end markers based on carpool data
+        uiState.currentCarpool?.let { carpool ->
+            startLocation = getLatLngFromLocationName(context, carpool.pickupLocation) ?: LatLng(0.0, 0.0)
+            endLocation = getLatLngFromLocationName(context, carpool.destination) ?: LatLng(0.0, 0.0)
+        }
     }
 
     GoogleMap(
         modifier = modifier,
         cameraPositionState = cameraPositionState,
+        onMapLoaded = {
+            // Zoom to fit both start and end locations after the map is fully loaded
+            startLocation.let { start ->
+                endLocation.let { end ->
+                    val bounds = LatLngBounds.Builder()
+                        .include(start)
+                        .include(end)
+                        .build()
+
+                    // Check that the CameraUpdateFactory is initialized only after the map is ready
+                    cameraPositionState.move(CameraUpdateFactory.newLatLngBounds(bounds, 100))
+                }
+            }
+        }
     ) {
         // Start location marker
-        startLocation?.let {
-            Marker(
-                state = MarkerState(position = it),
-                title = "Start Location"
-            )
-        }
+        Marker(
+            state = MarkerState(position = startLocation),
+            title = "Pickup Location"
+        )
 
         // End location marker
-        endLocation?.let {
-            Marker(
-                state = MarkerState(position = it),
-                title = "End Location"
+        Marker(
+            state = MarkerState(position = endLocation),
+            title = "Destination"
+        )
+
+        if (startLocation != LatLng(0.0, 0.0) && endLocation != LatLng(0.0, 0.0)) {
+            Polyline(
+                points = listOf(startLocation, endLocation),
+                clickable = true,
+                color = Color.Red,
+                width = 5f
             )
         }
-
-        Polyline(
-            points = listOf(startLocation, endLocation),
-            clickable = true,
-            color = MaterialTheme.colorScheme.primary,
-            width = 5f
-        )
 
         // Default marker
         Marker(
@@ -147,16 +165,23 @@ fun MapDisplay(
     }
 }
 
-fun getLatLngFromLocationName(context: Context, locationName: String): Unit? {
-    val geocoder = Geocoder(context, Locale.getDefault())
-    val addressList = geocoder.getFromLocationName(locationName, 1)
-
-        val address = addressList?.get(0)
-        val latitude = address?.latitude
-        val longitude = address?.longitude
-        return latitude?.let {
-            if (longitude != null) {
-                LatLng(it, longitude)
+suspend fun getLatLngFromLocationName(context: Context, locationName: String): LatLng? {
+    return withContext(Dispatchers.IO) {
+        try {
+            val geocoder = Geocoder(context)
+            val addressList = geocoder.getFromLocationName(locationName, 1)
+            if (addressList?.isNotEmpty() == true) {
+                val address = addressList[0]
+                LatLng(address.latitude, address.longitude)
+            } else {
+                null
             }
+        } catch (e: IOException) {
+            Log.e("GeocoderError", "Geocoding failed: ${e.message}")
+            null
+        } catch (e: Exception) {
+            Log.e("GeocoderError", "An error occurred: ${e.message}")
+            null
         }
+    }
 }

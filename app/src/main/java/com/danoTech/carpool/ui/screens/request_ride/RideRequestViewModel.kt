@@ -10,11 +10,13 @@ import com.danoTech.carpool.ui.screens.map.MapEvent
 import com.danoTech.carpool.ui.screens.map.MapStyle
 import com.danoTech.carpool.ui.screens.map.MapUiState
 import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -126,72 +128,82 @@ class RideRequestViewModel
         )
     }
 
-    // Request a ride for an existing carpool
-    fun requestRide(carpoolId: String) {
+    fun cancelCarpool() {
         viewModelScope.launch(Dispatchers.IO) {
+            val currentUser = FirebaseAuth.getInstance().currentUser?.email
+
             try {
-                storageService.requestRide(carpoolId, accountService.currentUser)
-                _rideUiState.value = _rideUiState.value.copy(
-                    isRideRequested = true,
-                    rideRequestMessage = "Ride requested successfully!"
-                )
+                val carpool = storageService.getCars().firstOrNull { it.first().passengers.contains(currentUser) }?.firstOrNull()
+
+                if (carpool != null) {
+                    val updatedPassengers = carpool.passengers - currentUser
+                    val updatedCarpool = carpool.copy(
+                        passengers = updatedPassengers,
+                        seatsAvailable = carpool.seatsAvailable + 1
+                    )
+
+                    // Update the carpool in storage
+                    storageService.updateCarpool(updatedCarpool)
+
+                    _rideUiState.value = _rideUiState.value.copy(
+                        currentCarpool = null,
+                        isCarpoolStarted = false,
+                        isRideRequested = false,
+                        carpoolMessage = "Carpool canceled successfully."
+                    )
+                } else {
+                    _rideUiState.value = _rideUiState.value.copy(
+                        carpoolMessage = "No active carpool to cancel."
+                    )
+                }
             } catch (exception: Exception) {
                 _rideUiState.value = _rideUiState.value.copy(
-                    isRideRequested = false,
-                    rideRequestMessage = "Failed to request ride. ${exception.message}",
+                    carpoolMessage = "Failed to cancel carpool. ${exception.message}",
                     isErrorSearch = true
                 )
-                Log.e("Request Ride", "Error: ${exception.message}")
+                Log.e("Cancel Carpool", "Error: ${exception.message}")
             }
         }
     }
 
-    fun isUserInActiveCarpool(userId: String): Boolean {
-        var isInActiveCarpool = false
-
+    fun checkUserInActiveCarpool(userId: String) {
         viewModelScope.launch(Dispatchers.Default) {
             try {
-                val cars = storageService.getCars()
+                // Collect the Flow from getCars() method
+                storageService.getCars().collect { cars ->
+                    val activeCarpools = cars.filter { it.active }
 
-                val activeCarpools = cars.filter {
-                    it.active
-                }
+                    Log.d("checkUserInActiveCarpool", "activeCarpools: $activeCarpools")
 
-                val userCarpool = activeCarpools.find { it.passengers.contains(userId) }
+                    val userCarpool = activeCarpools.find { it.passengers.contains(userId) }
 
-                if (userCarpool != null) {
-                    isInActiveCarpool = true
+                    Log.d("checkUserInActiveCarpool", "userCarpool: $userCarpool")
 
-                    _rideUiState.value = _rideUiState.value.copy(
-                        currentCarpool = userCarpool,
-                        destination = userCarpool.destination,
-                        pickupLocation = userCarpool.pickupLocation,
-                        price = userCarpool.price,
-                        isCarpoolStarted = true
-                    )
+                    if (userCarpool != null) {
+                        _rideUiState.value = _rideUiState.value.copy(
+                            currentCarpool = userCarpool,
+                            destination = userCarpool.destination,
+                            pickupLocation = userCarpool.pickupLocation,
+                            price = userCarpool.price,
+                            isCarpoolStarted = true,
+                            carpoolMessage = "You are currently in an active carpool.",
+                            isRideRequested = true
+                        )
+                    } else {
+                        // User is not in an active carpool
+                        _rideUiState.value = _rideUiState.value.copy(
+                            carpoolMessage = "You are not currently in an active carpool.",
+                            isRideRequested = false
+                        )
+                    }
                 }
             } catch (e: Exception) {
                 _rideUiState.value = _rideUiState.value.copy(
                     carpoolMessage = "Error checking carpool status: ${e.message}",
                     isRideRequested = false
                 )
-            } finally {
-                if (isInActiveCarpool) {
-                    _rideUiState.value = _rideUiState.value.copy(
-                        carpoolMessage = "You are currently in an active carpool.",
-                        isRideRequested = false
-                    )
-                } else {
-                    // User is not in an active carpool
-                    _rideUiState.value = _rideUiState.value.copy(
-                        carpoolMessage = "You are not currently in an active carpool.",
-                        isRideRequested = false
-                    )
-                }
             }
         }
-
-        return isInActiveCarpool
     }
 
     fun joinCarpool(carpoolId: String, userId: String): Boolean {
@@ -241,5 +253,4 @@ class RideRequestViewModel
     companion object {
         private const val TIMEOUT_MILLIS = 5_000L
     }
-
 }

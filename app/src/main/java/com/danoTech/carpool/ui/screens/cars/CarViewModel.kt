@@ -22,7 +22,9 @@ class CarViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            _cars.value = storageService.getCars()
+            storageService.getCars().collect {
+                _cars.value = it
+            }
         }
     }
 }
